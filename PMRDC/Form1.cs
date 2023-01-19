@@ -113,15 +113,16 @@ namespace PMRDC
         {
             //先判斷程式有沒有正確開啟
             //讓程式在工具列中隱藏
-            this.ShowInTaskbar = false;
-            //隱藏程式本身的視窗
-            this.Hide();
-            this.notifyIcon1.Visible = true;
+
             Sigma_exist = Simga_existFuc();
             if (Sigma_exist)
             {
                 if (timerStart == false)
                 {
+                    this.ShowInTaskbar = false;
+                    //隱藏程式本身的視窗
+                    this.Hide();
+                    this.notifyIcon1.Visible = true;
                     timerStart = true;
                     timer1.Interval = 200;
                     timer1.Tick += new EventHandler(timer1_Tick);
@@ -132,17 +133,28 @@ namespace PMRDC
             {
                 if (timerStart == false)
                 {
+                    try
+                    {
+                        // test
+                        Process Sigma6 = new Process();
+                        // FileName 是要執行的檔案
+                        Sigma6.StartInfo.FileName = "C:\\Program Files\\6SigmaDCRelease15\\6SigmaET.exe";
+                        Sigma6.Start();
+                        timerStart = true;
+                        timer1.Interval = 1000;
+                        timer1.Tick += new EventHandler(timer1_Tick);
+                        timer1.Enabled = true;
+                        this.ShowInTaskbar = false;
+                        //隱藏程式本身的視窗
+                        this.Hide();
+                        this.notifyIcon1.Visible = true;
+                    }
+                    catch 
+                    {
+                        string text = "電腦尚未安裝6Sigma，或路徑錯誤，請重新安裝。若有其他問題請聯絡Willy_Guo(#32725)";
+                        MessageBox.Show(text);
+                    }
 
-                    // test
-                    Process Sigma6 = new Process();
-                    // FileName 是要執行的檔案
-                    Sigma6.StartInfo.FileName = "C:\\Program Files\\6SigmaDCRelease15\\6SigmaET.exe";
-                    Sigma6.Start();
-                    timerStart = true;
-                    bool SigmaOpen = true;
-                    timer1.Interval = 1000;
-                    timer1.Tick += new EventHandler(timer1_Tick);
-                    timer1.Enabled = true;
                 }
 
             }
