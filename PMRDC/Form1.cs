@@ -132,6 +132,8 @@ namespace PMRDC
             {
                 if (timerStart == false)
                 {
+
+                    // test
                     Process Sigma6 = new Process();
                     // FileName 是要執行的檔案
                     Sigma6.StartInfo.FileName = "C:\\Program Files\\6SigmaDCRelease15\\6SigmaET.exe";
