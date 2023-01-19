@@ -11,6 +11,9 @@ using System.Diagnostics;
 using static System.Net.Mime.MediaTypeNames;
 using System.Security.Principal;
 using System.Reflection.Emit;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace PMRDC
 {
@@ -23,7 +26,52 @@ namespace PMRDC
         int xrepeat = 0;
         bool Sigma_exist;
         string strUserName = WindowsIdentity.GetCurrent().Name;
+        string Version = "v20230119";
+        public class Versionclass
+        {
+            public String SW { get; set; }
 
+            public string Now_version { get; set; }
+
+            public string user_version { get; set; }
+
+            public bool check { get; set; }
+        }
+        public async Task<bool> LogapiAsync(string action, int deltatime = 0)
+        {
+            string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            label5.Text = "使用者 : " + aryUserInfo[1];
+            HttpClient client = new HttpClient();
+            string reponse = await client.GetStringAsync("http://127.0.0.1/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime);
+            textBox1.Text = reponse;
+            return true;
+        }
+
+        public async Task<bool> VersioncheckAsync()
+        {
+            string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            label5.Text = "使用者 : " + aryUserInfo[1];
+            HttpClient client = new HttpClient();
+            string reponse = await client.GetStringAsync("http://127.0.0.1/swcheck/PMRDCscanPlatform/" + Version);
+            Versionclass descJsonVer = JsonConvert.DeserializeObject<Versionclass>(reponse);//反序列化
+            textBox1.Text = descJsonVer.user_version;
+            if(descJsonVer.user_version != descJsonVer.Now_version)
+            {
+                string alert = "請更新版本";
+                DialogResult result =  MessageBox.Show(alert);
+                if(result == DialogResult.OK)
+                {
+                    string myPath = @"D:\teraterm-4.106";
+                    System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                    prc.StartInfo.FileName = myPath;
+                    prc.Start();
+                    this.Dispose();
+                }
+                
+
+            }
+            return true;
+        }
         public bool Simga_existFuc()
         {
             Process[] processes = Process.GetProcessesByName("6SigmaET");
@@ -55,8 +103,7 @@ namespace PMRDC
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-            label5.Text = "使用者 : " + aryUserInfo[1];
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -135,6 +182,7 @@ namespace PMRDC
                 {
                     try
                     {
+                        Task<bool> task = LogapiAsync("Open");
                         // test
                         Process Sigma6 = new Process();
                         // FileName 是要執行的檔案
@@ -146,7 +194,7 @@ namespace PMRDC
                         timer1.Enabled = true;
                         this.ShowInTaskbar = false;
                         //隱藏程式本身的視窗
-                        this.Hide();
+                        //this.Hide();
                         this.notifyIcon1.Visible = true;
                     }
                     catch 
@@ -158,6 +206,14 @@ namespace PMRDC
                 }
 
             }
+        }
+
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+            string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            label5.Text = "使用者 : " + aryUserInfo[1];
+            Task<bool> task = VersioncheckAsync();
+
         }
     }
 }
