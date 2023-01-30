@@ -44,8 +44,6 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lbltimer = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -105,7 +103,6 @@
             this.label2.Size = new System.Drawing.Size(125, 40);
             this.label2.TabIndex = 2;
             this.label2.Text = "6SIGMA";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // button1
             // 
@@ -169,7 +166,7 @@
             // notifyIcon1
             // 
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Text = "PMRDC";
             this.notifyIcon1.Visible = true;
             // 
             // contextMenuStrip1
@@ -193,32 +190,12 @@
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(172, 44);
             this.closeToolStripMenuItem.Text = "Close";
             // 
-            // lbltimer
-            // 
-            this.lbltimer.AutoSize = true;
-            this.lbltimer.Location = new System.Drawing.Point(83, 920);
-            this.lbltimer.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
-            this.lbltimer.Name = "lbltimer";
-            this.lbltimer.Size = new System.Drawing.Size(83, 30);
-            this.lbltimer.TabIndex = 8;
-            this.lbltimer.Text = "label6";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(780, 50);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(704, 421);
-            this.textBox1.TabIndex = 9;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SteelBlue;
             this.ClientSize = new System.Drawing.Size(1683, 1112);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.lbltimer);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -228,6 +205,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load_1);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -253,8 +231,5 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
-        private System.Windows.Forms.Label lbltimer;
-        private System.Windows.Forms.TextBox textBox1;
     }
 }
-
