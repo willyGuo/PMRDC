@@ -43,7 +43,9 @@ namespace PMRDC
         int closePlatformCount = 0;
         //是否為閒置關閉
         bool idleclose = false;
-        
+        int aa = 1;
+        //127.0.0.1/
+
         public bool CreateDesktopShortcut( string FileName)
         {
             //建立桌面捷徑
@@ -215,6 +217,7 @@ namespace PMRDC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            timer1.Enabled = false;
             //計數器
             //如果第一次紀錄就先記錄第一次滑鼠x座標
 
@@ -242,11 +245,13 @@ namespace PMRDC
                     {
                         xrepeat = 0;                     
                     }
+                    timer1.Enabled = true;
                 }
+
                 //如果6Sigma不存在，則紀錄關閉6siggma時間後將平台關閉
                 else
                 {
-                    if(closePlatformCount == 0)
+                    if(true)
                     {
                         logwrite("userclose6Sigma");
                         closePlatformCount++;
@@ -254,7 +259,10 @@ namespace PMRDC
                         TimeSpan ts = timeminend.Subtract(timeminstr);
                         int tsmin = ts.Minutes;
                         LogapiAsync("userclose6Sigma", tsmin);
-                        this.Dispose();
+                        timer1.Enabled = false;
+                        textBox1.Text = aa.ToString();
+                        ++aa;
+                        //this.Dispose();
                     }
 
                 }
@@ -280,6 +288,7 @@ namespace PMRDC
                 ClosePress("6SigmaET");//關閉外部檔案
                 this.Dispose();
             }
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -298,10 +307,10 @@ namespace PMRDC
                     timeminstr = DateTime.Now;
                     this.ShowInTaskbar = false;
                     //隱藏程式本身的視窗
-                    this.Hide();
+                    //this.Hide();
                     this.notifyIcon1.Visible = true;
                     timerStart = true;
-                    timer1.Interval = 60000;
+                    timer1.Interval = 1000;
                     timer1.Tick += new EventHandler(timer1_Tick);
                     timer1.Enabled = true;
                 }
@@ -322,12 +331,12 @@ namespace PMRDC
                         Sigma6.StartInfo.FileName = "C:\\Program Files\\6SigmaDCRelease15\\6SigmaET.exe";
                         Sigma6.Start();
                         timerStart = true;
-                        timer1.Interval = 60000;
-                        timer1.Tick += new EventHandler(timer1_Tick);
+                        timer1.Interval = 1000;
+                        timer1.Tick +=  timer1_Tick;
                         timer1.Enabled = true;
                         this.ShowInTaskbar = false;
                         //隱藏程式本身的視窗
-                        this.Hide();
+                        //this.Hide();
                         this.notifyIcon1.Visible = true;
                     }
                     //如果打不開程式，就pop windows顯示提示訊息
