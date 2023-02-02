@@ -290,10 +290,9 @@ namespace PMRDC
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //ddddsadasd
+
             //先判斷程式有沒有正確開啟
             //讓程式在工具列中隱藏test
-            int a;
             Sigma_exist = Simga_existFuc();
             //如果Sigma已經被打開，但沒被計時，就直接寫log後計次
             if (Sigma_exist)
