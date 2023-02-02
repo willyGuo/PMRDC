@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
+
+
 namespace PMRDC
 {
     public partial class Form1 : Form
@@ -43,7 +45,6 @@ namespace PMRDC
         int closePlatformCount = 0;
         //是否為閒置關閉
         bool idleclose = false;
-        int aa = 1;
         //127.0.0.1/
 
         public bool CreateDesktopShortcut( string FileName)
@@ -217,7 +218,7 @@ namespace PMRDC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            timer1.Enabled = false;
+
             //計數器
             //如果第一次紀錄就先記錄第一次滑鼠x座標
 
@@ -251,20 +252,14 @@ namespace PMRDC
                 //如果6Sigma不存在，則紀錄關閉6siggma時間後將平台關閉
                 else
                 {
-                    if(true)
-                    {
-                        logwrite("userclose6Sigma");
-                        closePlatformCount++;
-                        timeminend = DateTime.Now;
-                        TimeSpan ts = timeminend.Subtract(timeminstr);
-                        int tsmin = ts.Minutes;
-                        LogapiAsync("userclose6Sigma", tsmin);
-                        timer1.Enabled = false;
-                        textBox1.Text = aa.ToString();
-                        ++aa;
-                        //this.Dispose();
-                    }
-
+                    logwrite("userclose6Sigma");
+                    closePlatformCount++;
+                    timeminend = DateTime.Now;
+                    TimeSpan ts = timeminend.Subtract(timeminstr);
+                    int tsmin = ts.Minutes;
+                    int thour = ts.Hours * 60;
+                    LogapiAsync("userclose6Sigma", tsmin + thour);
+                    timer1.Enabled = false;
                 }
 
             }
@@ -277,7 +272,7 @@ namespace PMRDC
                 MessageBox.Show(new Form { TopMost = true },text);
             }
             //如果60分鐘都沒動，就紀錄後關閉平台
-            if (xrepeat == 60)
+            if (xrepeat == 60 && idleclose==false)
             {
                 logwrite("idle60");
                 idleclose = true;
@@ -286,16 +281,19 @@ namespace PMRDC
                 int tsmin = ts.Minutes;
                 LogapiAsync("idle60", tsmin);
                 ClosePress("6SigmaET");//關閉外部檔案
-                this.Dispose();
+
+                //timer1.Enabled = false;
+                //this.Dispose();
             }
             
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //ddddsadasd
             //先判斷程式有沒有正確開啟
-            //讓程式在工具列中隱藏
-
+            //讓程式在工具列中隱藏test
+            int a;
             Sigma_exist = Simga_existFuc();
             //如果Sigma已經被打開，但沒被計時，就直接寫log後計次
             if (Sigma_exist)
@@ -310,8 +308,8 @@ namespace PMRDC
                     //this.Hide();
                     this.notifyIcon1.Visible = true;
                     timerStart = true;
-                    timer1.Interval = 1000;
-                    timer1.Tick += new EventHandler(timer1_Tick);
+                    timer1.Interval = 100;
+                   // timer1.Tick += new EventHandler(timer1_Tick);
                     timer1.Enabled = true;
                 }
             }
@@ -322,22 +320,26 @@ namespace PMRDC
                 {
                     try
                     {
+                        
                         logwrite("Open6Sigma");
                         timeminstr = DateTime.Now;
-                        Task<bool> task = LogapiAsync("Open6Sigma");
+                        LogapiAsync("Open6Sigma");
                         // test
                         Process Sigma6 = new Process();
                         // FileName 是要執行的檔案
                         Sigma6.StartInfo.FileName = "C:\\Program Files\\6SigmaDCRelease15\\6SigmaET.exe";
                         Sigma6.Start();
                         timerStart = true;
-                        timer1.Interval = 1000;
-                        timer1.Tick +=  timer1_Tick;
+                        timer1.Interval = 100;
+                      //  timer1.Tick +=  timer1_Tick;
+                        timer1.Enabled = false;
+                       
                         timer1.Enabled = true;
                         this.ShowInTaskbar = false;
+    
                         //隱藏程式本身的視窗
                         //this.Hide();
-                        this.notifyIcon1.Visible = true;
+                        //this.notifyIcon1.Visible = true;
                     }
                     //如果打不開程式，就pop windows顯示提示訊息
                     catch 
@@ -401,6 +403,16 @@ namespace PMRDC
                 TimeSpan ts = timeminPlatformend.Subtract(timeminPlatformstr);
                 int tsmin = ts.Minutes;
                 LogapiAsync("ClosePlatform", tsmin);
+            }
+            bool Sigma_exist_formC = Simga_existFuc();
+            if (Sigma_exist_formC)
+            {
+                logwrite("userclose6Sigma");
+                timeminend = DateTime.Now;
+                TimeSpan ts = timeminend.Subtract(timeminstr);
+                int tsmin = ts.Minutes;
+                int thour = ts.Hours * 60;
+                LogapiAsync("userclose6Sigma", tsmin + thour);
             }
             
         }
