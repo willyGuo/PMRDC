@@ -35,15 +35,18 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.reloadmeun = new System.Windows.Forms.ToolStripMenuItem();
+            this.closemeun = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpmeun = new System.Windows.Forms.ToolStripMenuItem();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -72,9 +75,9 @@
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.groupBox1.Location = new System.Drawing.Point(116, 89);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(1);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(1);
             this.groupBox1.Size = new System.Drawing.Size(417, 185);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
@@ -102,27 +105,6 @@
             this.label2.Size = new System.Drawing.Size(50, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "6SIGMA";
-            // 
-            // button1
-            // 
-            this.button1.Image = global::PMRDC.Properties.Resources._6sigma;
-            this.button1.Location = new System.Drawing.Point(59, 39);
-            this.button1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(120, 80);
-            this.button1.TabIndex = 0;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Image = global::PMRDC.Properties.Resources.FloTHERM_XT;
-            this.button2.Location = new System.Drawing.Point(234, 39);
-            this.button2.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(120, 80);
-            this.button2.TabIndex = 1;
-            this.button2.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -161,6 +143,7 @@
             // 
             // notifyIcon1
             // 
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
             this.notifyIcon1.Text = "PMRDC";
             this.notifyIcon1.Visible = true;
@@ -169,22 +152,78 @@
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem,
-            this.closeToolStripMenuItem});
+            this.reloadmeun,
+            this.closemeun,
+            this.helpmeun});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(107, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(142, 142);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
-            // openToolStripMenuItem
+            // textBox1
             // 
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
-            this.openToolStripMenuItem.Text = "Open";
+            this.textBox1.Location = new System.Drawing.Point(23, 161);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(79, 81);
+            this.textBox1.TabIndex = 7;
             // 
-            // closeToolStripMenuItem
+            // button1
             // 
-            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
-            this.closeToolStripMenuItem.Text = "Close";
+            this.button1.Image = global::PMRDC.Properties.Resources._6sigma;
+            this.button1.Location = new System.Drawing.Point(59, 39);
+            this.button1.Margin = new System.Windows.Forms.Padding(1);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(120, 80);
+            this.button1.TabIndex = 0;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Image = global::PMRDC.Properties.Resources.FloTHERM_XT;
+            this.button2.Location = new System.Drawing.Point(234, 39);
+            this.button2.Margin = new System.Windows.Forms.Padding(1);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(120, 80);
+            this.button2.TabIndex = 1;
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // reloadmeun
+            // 
+            this.reloadmeun.AutoSize = false;
+            this.reloadmeun.Image = ((System.Drawing.Image)(resources.GetObject("reloadmeun.Image")));
+            this.reloadmeun.Name = "reloadmeun";
+            this.reloadmeun.Size = new System.Drawing.Size(204, 46);
+            this.reloadmeun.Text = "Reload";
+            this.reloadmeun.Click += new System.EventHandler(this.ReloadToolStripMenuItem_Click);
+            // 
+            // closemeun
+            // 
+            this.closemeun.Image = global::PMRDC.Properties.Resources.update;
+            this.closemeun.Name = "closemeun";
+            this.closemeun.Size = new System.Drawing.Size(141, 46);
+            this.closemeun.Text = "Update";
+            this.closemeun.Click += new System.EventHandler(this.UpdateToolStripMenuItem_Click);
+            // 
+            // helpmeun
+            // 
+            this.helpmeun.Image = ((System.Drawing.Image)(resources.GetObject("helpmeun.Image")));
+            this.helpmeun.Name = "helpmeun";
+            this.helpmeun.Size = new System.Drawing.Size(141, 46);
+            this.helpmeun.Text = "Help";
+            this.helpmeun.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
+            this.helpmeun.Paint += new System.Windows.Forms.PaintEventHandler(this.helpmeun_Paint);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label6.Location = new System.Drawing.Point(462, 71);
+            this.label6.Name = "label6";
+            this.label6.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label6.Size = new System.Drawing.Size(40, 17);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "版本 :";
             // 
             // Form1
             // 
@@ -192,13 +231,15 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SteelBlue;
             this.ClientSize = new System.Drawing.Size(631, 424);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -225,7 +266,10 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadmeun;
+        private System.Windows.Forms.ToolStripMenuItem closemeun;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ToolStripMenuItem helpmeun;
+        private System.Windows.Forms.Label label6;
     }
 }

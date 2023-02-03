@@ -3,11 +3,12 @@ using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.IO.Compression;
 
 
 
@@ -32,7 +33,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230118";
+        string Version = "v20230203";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -46,7 +47,8 @@ namespace PMRDC
         //是否為閒置關閉
         bool idleclose = false;
         //127.0.0.1/
-
+        int aa;
+        bool sigmaFirstOpen = true;
         public bool CreateDesktopShortcut( string FileName)
         {
             //建立桌面捷徑
@@ -55,7 +57,7 @@ namespace PMRDC
             try
             {
                 //取得目前桌面路徑
-                string deskTop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\";
+                string deskTop = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\";
                 if (System.IO.File.Exists(deskTop + FileName + ".lnk"))  
                 {
                     System.IO.File.Delete(deskTop + FileName + ".lnk");//刪除原來的桌面快捷鍵方式
@@ -105,6 +107,7 @@ namespace PMRDC
 
             }
         }
+        
         public void Filecheck()
         {
             //判斷log檔案的資料夾和檔案是否存在
@@ -127,6 +130,13 @@ namespace PMRDC
 
 
         }
+
+
+
+
+
+
+
         public class Versionclass
         {
             //轉型網站API回傳的Json格式 to 字典
@@ -137,9 +147,11 @@ namespace PMRDC
             public string user_version { get; set; }
 
             public bool check { get; set; }
+            public string Downloaduri { get; set; }
         }
         public async Task<bool> LogapiAsync(string action, int deltatime = 0)
         {
+
             //將User使用狀況回傳到server紀錄
             //取得windows使用者名稱
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
@@ -154,6 +166,7 @@ namespace PMRDC
 
         public async Task<bool> VersioncheckAsync()
         {
+     
             //平台開始時，確認是否有新的版本要更新
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新的連線後，打API確認版本號
@@ -161,25 +174,50 @@ namespace PMRDC
             string reponse = await client.GetStringAsync("http://127.0.0.1/swcheck/PMRDCPlatform/" + Version);
             Versionclass descJsonVer = JsonConvert.DeserializeObject<Versionclass>(reponse);//反序列化
             //如果版本號不同就強制下載，並關閉目前平台
-            if(descJsonVer.user_version != descJsonVer.Now_version)
+            if (descJsonVer.user_version != descJsonVer.Now_version)
             {
-                string alert = "版本更新 ! 確認後自動下載，請執行最新版本";
-                DialogResult result =  MessageBox.Show(alert);
-                if(result == DialogResult.OK)
+                //string alert = "版本更新 ! 確認後自動下載，請執行最新版本";
+                //DialogResult result =  MessageBox.Show(alert);
+                //string myPath = @"D:\test";
+                //System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                //prc.StartInfo.FileName = myPath;
+                //prc.Start();
+                //Process.Start("chrome.EXE", @"http://127.0.0.1/download/detail");
+                string remoteUri = "http://127.0.0.1/media/PMRDCPlatform/";
+                string fileName = descJsonVer.Downloaduri, myStringWebResource = null;
+                //textBox2.Text = fileName;
+                // Create a new WebClient instance.
+                WebClient myWebClient = new WebClient();
+                // Concatenate the domain with the Web resource filename.
+                myStringWebResource = remoteUri + fileName;
+                // Download the Web resource and save it into the current filesystem folder.
+                myWebClient.DownloadFile(myStringWebResource, fileName);
+                string zippath = Environment.GetFolderPath(Environment.SpecialFolder.Startup).Replace("Startup", "PMRDC/" + descJsonVer.Now_version);
+                if (Directory.Exists(zippath))
                 {
-                    //string myPath = @"D:\test";
-                    //System.Diagnostics.Process prc = new System.Diagnostics.Process();
-                    //prc.StartInfo.FileName = myPath;
-                    //prc.Start();
-                    Process.Start("chrome.EXE", @"http://127.0.0.1/download/detail");
-                    this.Dispose();
+                    DirectoryInfo directory = new DirectoryInfo(zippath);
+                    directory.Delete(true);
                 }
+                if (!Directory.Exists(zippath))
+                {
+                    //建立資料夾
+                    Directory.CreateDirectory(zippath);
+                }
+           
+                ZipFile.ExtractToDirectory(Application.StartupPath + "/" + descJsonVer.Downloaduri, zippath);
 
+                Process PMRDCexe = new Process();
+                // FileName 是要執行的檔案
                 
+                PMRDCexe.StartInfo.FileName = zippath + "/PMRDC.exe";
+                PMRDCexe.Start();
 
+                //this.Dispose();
             }
             return true;
         }
+
+
         public bool Simga_existFuc()
         {
             //判斷6Sigma是否存在，存在回傳true，不存在回傳false
@@ -197,7 +235,12 @@ namespace PMRDC
         {
             Process[] MyProcess = Process.GetProcessesByName(FileName);
             if (MyProcess.Length > 0)
-                MyProcess[0].Kill(); //關閉執行中的程式
+            {
+                for(int i = 0; i < MyProcess.Length; i++)
+                {
+                    MyProcess[i].Kill();
+                }  
+            } 
             return true;
         }
         public Form1()
@@ -218,75 +261,161 @@ namespace PMRDC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            textBox1.Text = aa.ToString();
+            ++aa;
+            DateTime nowtime = DateTime.Now;
+            if (nowtime.ToString("HH:mm") == "17:25" || nowtime.ToString("HH:mm") =="17:26"){
+                Task<bool> task = VersioncheckAsync();
+                return;
+            }
+            VersioncheckAsync();
+            return;
 
             //計數器
             //如果第一次紀錄就先記錄第一次滑鼠x座標
 
             //lbltimer.Text = string.Format("時間：" + DateTime.Now.ToString("HH:mm:ss") + "，X：{0}，Y：{1}"
             //, System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y);
-            if (timerCount == 0)
+            Sigma_exist = Simga_existFuc();
+            //如果Sigma有打開，就在執行
+            if (Sigma_exist)
             {
-                Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
-                ++timerCount;
-            }
-            else  //第二次之後，將上一次紀錄的座標定義成上一次，再記錄一次新的x座標
-            {
-                Pastx = Nowx;
-                Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
-                //紀錄後判斷6Sigma是否存在
-                Sigma_exist = Simga_existFuc();
-                //如果存在就來判斷x座標是否相同，相同增加計次，不同就將計次歸0
-                if (Sigma_exist)
+                //如果Sigma是打開的，那就判斷是否曾經打開過
+                //如果沒打開過，就紀錄第一次X，且判斷程已打開過
+                if (sigmaFirstOpen == true)
                 {
+                    timeminstr = DateTime.Now;
+                    Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
+                    logwrite("Open6Sigma");
+                    LogapiAsync("Open6Sigma");
+                    ++timerCount;
+                    sigmaFirstOpen = false;
+                }
+                //如果打開過，就來判斷X座標
+                if (sigmaFirstOpen == false)
+                {
+                    Pastx = Nowx;
+                    Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
                     if (Pastx == Nowx)
                     {
                         ++xrepeat;
                     }
                     else
                     {
-                        xrepeat = 0;                     
+                        xrepeat = 0;
                     }
-                    timer1.Enabled = true;
                 }
-
-                //如果6Sigma不存在，則紀錄關閉6siggma時間後將平台關閉
-                else
+                if (xrepeat == 45)
                 {
-                    logwrite("userclose6Sigma");
-                    closePlatformCount++;
+                    logwrite("idle45");
+                    LogapiAsync("idle45");
+                    string text45 = "電腦已閒置45分鐘，請立即存檔。系統若閒置60分鐘，將強制關閉6Sigma。";
+                    MessageBox.Show(new Form { TopMost = true }, text45);
+                    return;
+                }
+                //如果60分鐘都沒動，就紀錄後關閉平台
+                if (xrepeat == 60)
+                {
+                    logwrite("idle60");
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
                     int tsmin = ts.Minutes;
-                    int thour = ts.Hours * 60;
-                    LogapiAsync("userclose6Sigma", tsmin + thour);
-                    timer1.Enabled = false;
+                    LogapiAsync("idle60", tsmin);
+                    ClosePress("6SigmaET");//關閉外部檔案
+                    string text60 = "因電腦閒置60分鐘，故將6Sigma關閉。";
+                    sigmaFirstOpen = true;
+                    MessageBox.Show(new Form { TopMost = true }, text60);
+                    return;
                 }
 
             }
-            //如果45次(45分鐘)都沒再動，就跳出提示，並記錄
-            if (xrepeat == 45)
+            //如果Sigma是關閉的，Sigma也曾經開啟
+            if (!Sigma_exist && sigmaFirstOpen == false)
             {
-                logwrite("idle45");
-                LogapiAsync("idle45");
-                string text = "電腦已閒置45分鐘，請立即存檔。系統若閒置60分鐘，將強制關閉6Sigma。";
-                MessageBox.Show(new Form { TopMost = true },text);
-            }
-            //如果60分鐘都沒動，就紀錄後關閉平台
-            if (xrepeat == 60 && idleclose==false)
-            {
-                logwrite("idle60");
-                idleclose = true;
+                sigmaFirstOpen = true;
+                logwrite("userclose6Sigma");
                 timeminend = DateTime.Now;
                 TimeSpan ts = timeminend.Subtract(timeminstr);
                 int tsmin = ts.Minutes;
-                LogapiAsync("idle60", tsmin);
-                ClosePress("6SigmaET");//關閉外部檔案
-
-                //timer1.Enabled = false;
-                //this.Dispose();
+                int thour = ts.Hours * 60;
+                LogapiAsync("userclose6Sigma", tsmin + thour);
+                
             }
-            
         }
+
+
+      
+
+        //    //如果沒打開就不執行
+        //    if (!Sigma_exist)
+        //    {
+        //        //檢查是否曾經開啟過
+        //    }
+
+
+        //    if (timerCount == 0)
+        //    {
+        //        Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
+        //        ++timerCount;
+        //    }
+        //    else  //第二次之後，將上一次紀錄的座標定義成上一次，再記錄一次新的x座標
+        //    {
+        //        Pastx = Nowx;
+        //        Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
+        //        //紀錄後判斷6Sigma是否存在
+        //        Sigma_exist = Simga_existFuc();
+        //        //如果存在就來判斷x座標是否相同，相同增加計次，不同就將計次歸0
+        //        if (Sigma_exist)
+        //        {
+        //            if (Pastx == Nowx)
+        //            {
+        //                ++xrepeat;
+        //            }
+        //            else
+        //            {
+        //                xrepeat = 0;                     
+        //            }
+        //            timer1.Enabled = true;
+        //        }
+
+        //        //如果6Sigma不存在，則紀錄關閉6siggma時間後將平台關閉
+        //        else
+        //        {
+        //            logwrite("userclose6Sigma");
+        //            closePlatformCount++;
+        //            timeminend = DateTime.Now;
+        //            TimeSpan ts = timeminend.Subtract(timeminstr);
+        //            int tsmin = ts.Minutes;
+        //            int thour = ts.Hours * 60;
+        //            LogapiAsync("userclose6Sigma", tsmin + thour);
+        //        }
+
+        //    }
+        //    //如果45次(45分鐘)都沒再動，就跳出提示，並記錄
+        //    if (xrepeat == 45)
+        //    {
+        //        logwrite("idle45");
+        //        LogapiAsync("idle45");
+        //        string text45 = "電腦已閒置45分鐘，請立即存檔。系統若閒置60分鐘，將強制關閉6Sigma。";
+        //        MessageBox.Show(new Form { TopMost = true },text45);
+        //    }
+        //    //如果60分鐘都沒動，就紀錄後關閉平台
+        //    if (xrepeat == 60 && idleclose==false)
+        //    {
+        //        logwrite("idle60");
+        //        idleclose = true;
+        //        timeminend = DateTime.Now;
+        //        TimeSpan ts = timeminend.Subtract(timeminstr);
+        //        int tsmin = ts.Minutes;
+        //        LogapiAsync("idle60", tsmin);
+        //        ClosePress("6SigmaET");//關閉外部檔案
+        //        string text60 = "因電腦閒置60分鐘，故將6Sigma關閉。";
+        //        MessageBox.Show(new Form { TopMost = true }, text60);
+        //        //timer1.Enabled = false;
+        //        //this.Dispose();
+        //    }
+            
+        //}
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -324,15 +453,12 @@ namespace PMRDC
                         timeminstr = DateTime.Now;
                         LogapiAsync("Open6Sigma");
                         // test
-                        Process Sigma6 = new Process();
-                        // FileName 是要執行的檔案
-                        Sigma6.StartInfo.FileName = "C:\\Program Files\\6SigmaDCRelease15\\6SigmaET.exe";
-                        Sigma6.Start();
+                        //Process Sigma6 = new Process();
+                        //// FileName 是要執行的檔案
+                        //Sigma6.StartInfo.FileName = "C:\\Program Files\\6SigmaDCRelease15\\6SigmaET.exe";
+                        //Sigma6.Start();
                         timerStart = true;
                         timer1.Interval = 100;
-                      //  timer1.Tick +=  timer1_Tick;
-                        timer1.Enabled = false;
-                       
                         timer1.Enabled = true;
                         this.ShowInTaskbar = false;
     
@@ -355,6 +481,7 @@ namespace PMRDC
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
+            
             //當平台開啟時，先預設一些要跑的動作
             //在桌面建立一個捷徑
             CreateDesktopShortcut("PMRDC.exe");
@@ -378,10 +505,15 @@ namespace PMRDC
             timeminPlatformstr = DateTime.Now;
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             label5.Text = "使用者 : " + aryUserInfo[1];
+            label6.Text = Version;
             //判斷版本
-            Task<bool> task = VersioncheckAsync();
+            //Task<bool> task = VersioncheckAsync();
             //紀錄開啟平台LOG
             LogapiAsync("OpenPlatform");
+            timerStart = true;
+            timer1.Interval = 200;
+            timer1.Enabled = true;
+            this.ShowInTaskbar = false;
 
         }
 
@@ -423,7 +555,35 @@ namespace PMRDC
 
         }
 
-        private void lbltimer_Click(object sender, EventArgs e)
+        private void ReloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string textrrload = "重載成功!";
+            MessageBox.Show(new Form { TopMost = true }, textrrload);
+            System.Windows.Forms.Application.Restart();
+        }
+
+        private void UpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string texthelp = "* 依軟體使用辦法，請勿長時間占用\r\n* " +
+          "若有急需使用軟體，但無License情況請聯絡RDPM(Marcus Kuo #33930)\r\n* " +
+          "程序問題可以先在右下角圖示右鍵Reload排除\r\n* " +
+          "平台使用問題請聯絡Willy Guo(#32725)\r\n" +
+          "版本號 : " + Version;
+
+            MessageBox.Show(new Form { TopMost = true }, texthelp);
+        }
+
+        private void helpmeun_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
         }
