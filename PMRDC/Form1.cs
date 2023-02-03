@@ -9,8 +9,9 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Compression;
-
-
+using System.Linq;
+using System.Collections.Generic;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PMRDC
 {
@@ -33,7 +34,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230203";
+        string Version = "v20230206";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -47,7 +48,7 @@ namespace PMRDC
         //是否為閒置關閉
         bool idleclose = false;
         //127.0.0.1/
-        int aa;
+        int aa =1 ;
         bool sigmaFirstOpen = true;
         public bool CreateDesktopShortcut( string FileName)
         {
@@ -80,6 +81,45 @@ namespace PMRDC
             catch (Exception)
             {
                 return false;
+            }
+        }
+        public void variblelog()
+        {
+            Process[] localByName = Process.GetProcessesByName("PMRDC");
+            using (StreamWriter writer = new StreamWriter(logPath + "\\" + "varible.txt"))
+            {
+                writer.Write("");
+
+            }
+            using (StreamWriter sw = System.IO.File.AppendText(logPath + "\\" + "varible.txt"))
+            {
+                foreach (Process process in localByName)
+                {
+                    sw.Write(process.Id.ToString() + ",");
+                }
+
+            }
+        }
+        public void delpast6sigma()
+        {
+            //紀錄變數的txt不存在就先建立，避免讀不到
+            if (!System.IO.File.Exists(logPath + "\\" + "varible.txt"))
+            {
+                //建立檔案
+                System.IO.File.Create(logPath + "\\" + "varible.txt").Close();
+            }
+            string text = System.IO.File.ReadAllText(logPath + "\\" + "varible.txt");
+            List<string> list = new List<string>();
+            list = text.Split(',').ToList();
+            foreach (var id in list)
+            {
+                try
+                {
+                    Process p = Process.GetProcessById(Int32.Parse(id));
+                    p.Kill();
+                }
+                catch { 
+                }
             }
         }
         public void logwrite(string logmsg)
@@ -130,12 +170,6 @@ namespace PMRDC
 
 
         }
-
-
-
-
-
-
 
         public class Versionclass
         {
@@ -217,7 +251,6 @@ namespace PMRDC
             return true;
         }
 
-
         public bool Simga_existFuc()
         {
             //判斷6Sigma是否存在，存在回傳true，不存在回傳false
@@ -269,7 +302,6 @@ namespace PMRDC
                 return;
             }
             VersioncheckAsync();
-            return;
 
             //計數器
             //如果第一次紀錄就先記錄第一次滑鼠x座標
@@ -490,18 +522,8 @@ namespace PMRDC
             //紀錄LOG
             logwrite("Open Platform");
             //判斷平台是否有重複開啟，有的話把先前的全部關掉，留一個並重新啟動
-            Process[] processesPMRDC = Process.GetProcessesByName("PMRDC");
-            int PMRDCLength = processesPMRDC.Length;
-            if(PMRDCLength > 1)
-            {
-                for(int i = 0; i<1; i++)
-                {
-                    processesPMRDC[i].Kill();
-                }
-
-                System.Windows.Forms.Application.Restart();
-
-            }
+            delpast6sigma();
+            variblelog();
             timeminPlatformstr = DateTime.Now;
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             label5.Text = "使用者 : " + aryUserInfo[1];
@@ -511,9 +533,11 @@ namespace PMRDC
             //紀錄開啟平台LOG
             LogapiAsync("OpenPlatform");
             timerStart = true;
-            timer1.Interval = 200;
+            timer1.Interval = 5000;
             timer1.Enabled = true;
             this.ShowInTaskbar = false;
+            textBox1.Text = "start";
+            this.notifyIcon1.Text = Version;
 
         }
 
@@ -586,6 +610,17 @@ namespace PMRDC
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click_2(object sender, EventArgs e)
+        {
+            //variblelog();
+            delpast6sigma();
         }
     }
 }

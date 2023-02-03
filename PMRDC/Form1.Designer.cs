@@ -35,18 +35,19 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.reloadmeun = new System.Windows.Forms.ToolStripMenuItem();
             this.closemeun = new System.Windows.Forms.ToolStripMenuItem();
             this.helpmeun = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -106,6 +107,27 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "6SIGMA";
             // 
+            // button1
+            // 
+            this.button1.Image = global::PMRDC.Properties.Resources._6sigma;
+            this.button1.Location = new System.Drawing.Point(59, 39);
+            this.button1.Margin = new System.Windows.Forms.Padding(1);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(120, 80);
+            this.button1.TabIndex = 0;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Image = global::PMRDC.Properties.Resources.FloTHERM_XT;
+            this.button2.Location = new System.Drawing.Point(234, 39);
+            this.button2.Margin = new System.Windows.Forms.Padding(1);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(120, 80);
+            this.button2.TabIndex = 1;
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -159,35 +181,6 @@
             this.contextMenuStrip1.Size = new System.Drawing.Size(142, 142);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(23, 161);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(79, 81);
-            this.textBox1.TabIndex = 7;
-            // 
-            // button1
-            // 
-            this.button1.Image = global::PMRDC.Properties.Resources._6sigma;
-            this.button1.Location = new System.Drawing.Point(59, 39);
-            this.button1.Margin = new System.Windows.Forms.Padding(1);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(120, 80);
-            this.button1.TabIndex = 0;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Image = global::PMRDC.Properties.Resources.FloTHERM_XT;
-            this.button2.Location = new System.Drawing.Point(234, 39);
-            this.button2.Margin = new System.Windows.Forms.Padding(1);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(120, 80);
-            this.button2.TabIndex = 1;
-            this.button2.UseVisualStyleBackColor = true;
-            // 
             // reloadmeun
             // 
             this.reloadmeun.AutoSize = false;
@@ -214,6 +207,15 @@
             this.helpmeun.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             this.helpmeun.Paint += new System.Windows.Forms.PaintEventHandler(this.helpmeun_Paint);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(23, 161);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(79, 81);
+            this.textBox1.TabIndex = 7;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -225,12 +227,23 @@
             this.label6.TabIndex = 8;
             this.label6.Text = "版本 :";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(427, 358);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 9;
+            this.button4.Text = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click_2);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SteelBlue;
             this.ClientSize = new System.Drawing.Size(631, 424);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button3);
@@ -271,5 +284,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ToolStripMenuItem helpmeun;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button4;
     }
 }
