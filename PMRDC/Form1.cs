@@ -12,13 +12,15 @@ using System.IO.Compression;
 using System.Linq;
 using System.Collections.Generic;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace PMRDC
 {
     public partial class Form1 : Form
     {
         //設定LOG要存放的位置
-        String logPath = "D:\\PMRDCFile\\log"; //Log目錄
+        String logPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup).Replace("Startup", "PMRDC"); //Log目錄
         //判斷是否為開計時器的開始而已
         int timerCount = 0;
         //計時器開啟，預設先關閉
@@ -34,7 +36,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230206";
+        string Version = "v202302057777777";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -50,6 +52,31 @@ namespace PMRDC
         //127.0.0.1/
         int aa =1 ;
         bool sigmaFirstOpen = true;
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool BringWindowToTop(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
+        static extern IntPtr GetTopWindow(IntPtr hWnd);
+
+        public static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
+
+        public  void bringToFront(string title)
+        {
+            
+            // Get a handle to the Calculator application.
+            IntPtr handle = FindWindow(null, title);
+            textBox1.Text = handle.ToString(); 
+            // Verify that Calculator is a running process.
+            //if (handle == IntPtr.Zero)
+            //{
+            //    return;
+            //}
+            BringWindowToTop(handle); // 將視窗浮在最上層
+            ShowWindow(handle, 3); // 將視窗最大化
+        }
         public bool CreateDesktopShortcut( string FileName)
         {
             //建立桌面捷徑
@@ -98,6 +125,18 @@ namespace PMRDC
                     sw.Write(process.Id.ToString() + ",");
                 }
 
+            }
+        }
+        public void delpast6sigma2()
+        {
+            Process currentProcess = Process.GetCurrentProcess();
+            Process[] processes = Process.GetProcessesByName("PMRDC");
+            foreach (Process process in processes)
+            {
+                if(process.Id.ToString() != currentProcess.Id.ToString())
+                {
+                    process.Kill();
+                }
             }
         }
         public void delpast6sigma()
@@ -271,6 +310,7 @@ namespace PMRDC
             {
                 for(int i = 0; i < MyProcess.Length; i++)
                 {
+
                     MyProcess[i].Kill();
                 }  
             } 
@@ -513,17 +553,21 @@ namespace PMRDC
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
-            
+
             //當平台開啟時，先預設一些要跑的動作
             //在桌面建立一個捷徑
+            delpast6sigma2();
+            bringToFront("LINE.exe");
+            return;
             CreateDesktopShortcut("PMRDC.exe");
             //判斷紀錄LOG的資料夾和檔案是否存在
             Filecheck();
             //紀錄LOG
             logwrite("Open Platform");
             //判斷平台是否有重複開啟，有的話把先前的全部關掉，留一個並重新啟動
-            delpast6sigma();
-            variblelog();
+            //delpast6sigma();
+            //variblelog();
+            //
             timeminPlatformstr = DateTime.Now;
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             label5.Text = "使用者 : " + aryUserInfo[1];
@@ -543,7 +587,7 @@ namespace PMRDC
 
         private void button4_Click(object sender, EventArgs e)
         {
-
+            bringToFront("LINE.exe");
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) //當平台要被關閉前，紀錄被關閉
@@ -619,8 +663,7 @@ namespace PMRDC
 
         private void button4_Click_2(object sender, EventArgs e)
         {
-            //variblelog();
-            delpast6sigma();
+            bringToFront("6SigmaET");
         }
     }
 }
