@@ -1,19 +1,19 @@
 ﻿using IWshRuntimeLibrary;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO.Compression;
 using System.Linq;
-using System.Collections.Generic;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Threading;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PMRDC
 {
@@ -36,7 +36,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v202302057777777";
+        string Version = "v20230209";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -49,8 +49,8 @@ namespace PMRDC
         int closePlatformCount = 0;
         //是否為閒置關閉
         bool idleclose = false;
-        //127.0.0.1/
-        int aa =1 ;
+        //172.18.212.76/
+        //172.18.212.76
         bool sigmaFirstOpen = true;
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool BringWindowToTop(IntPtr hWnd);
@@ -59,16 +59,38 @@ namespace PMRDC
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
-        static extern IntPtr GetTopWindow(IntPtr hWnd);
-
         public static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+        [DllImport("user32.dll")]
+        static extern bool CloseWindow(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+        private const UInt32 WM_CLOSE = 0x0010;
+        public void idlecloseSW()
+        {
+            foreach (Process p in Process.GetProcesses(System.Environment.MachineName))
+            {
+                if (p.MainWindowHandle != IntPtr.Zero)
+                {
+                    // Display the user name of the program
+                    textBox1.Text += p.ProcessName.ToString() + "\r\n";
+                    if (p.ProcessName.Contains("6SigmaET"))
+                    {
+                        bringToFront("6SigmaET");
+                    }
+                }
+            }
+        }
 
         public  void bringToFront(string title)
         {
             
             // Get a handle to the Calculator application.
             IntPtr handle = FindWindow(null, title);
-            textBox1.Text = handle.ToString(); 
             // Verify that Calculator is a running process.
             //if (handle == IntPtr.Zero)
             //{
@@ -76,6 +98,15 @@ namespace PMRDC
             //}
             BringWindowToTop(handle); // 將視窗浮在最上層
             ShowWindow(handle, 3); // 將視窗最大化
+            //CloseWindow(handle,4);
+            //存檔 且案Enter
+            SendKeys.SendWait("^(s)");
+            SendKeys.Send("{ENTER}");
+            Thread.Sleep(3000);
+            //關閉視窗
+            SendMessage(handle, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+
+
         }
         public bool CreateDesktopShortcut( string FileName)
         {
@@ -230,7 +261,7 @@ namespace PMRDC
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新連線後，將資料用post方式回傳
             HttpClient client = new HttpClient();
-            string reponse = await client.GetStringAsync("http://127.0.0.1/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime);
+            string reponse = await client.GetStringAsync("http://172.18.212.76/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime);
             //textBox1.Text = reponse;
 
             return true;
@@ -244,7 +275,7 @@ namespace PMRDC
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新的連線後，打API確認版本號
             HttpClient client = new HttpClient();
-            string reponse = await client.GetStringAsync("http://127.0.0.1/swcheck/PMRDCPlatform/" + Version);
+            string reponse = await client.GetStringAsync("http://172.18.212.76/swcheck/PMRDCPlatform/" + Version);
             Versionclass descJsonVer = JsonConvert.DeserializeObject<Versionclass>(reponse);//反序列化
             //如果版本號不同就強制下載，並關閉目前平台
             if (descJsonVer.user_version != descJsonVer.Now_version)
@@ -255,8 +286,8 @@ namespace PMRDC
                 //System.Diagnostics.Process prc = new System.Diagnostics.Process();
                 //prc.StartInfo.FileName = myPath;
                 //prc.Start();
-                //Process.Start("chrome.EXE", @"http://127.0.0.1/download/detail");
-                string remoteUri = "http://127.0.0.1/media/PMRDCPlatform/";
+                //Process.Start("chrome.EXE", @"http://172.18.212.76/download/detail");
+                string remoteUri = "http://172.18.212.76/media/PMRDCPlatform/";
                 string fileName = descJsonVer.Downloaduri, myStringWebResource = null;
                 //textBox2.Text = fileName;
                 // Create a new WebClient instance.
@@ -334,14 +365,10 @@ namespace PMRDC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            textBox1.Text = aa.ToString();
-            ++aa;
             DateTime nowtime = DateTime.Now;
-            if (nowtime.ToString("HH:mm") == "17:25" || nowtime.ToString("HH:mm") =="17:26"){
+            if (nowtime.ToString("HH:mm") == "13:00" || nowtime.ToString("HH:mm") =="13:01"){
                 Task<bool> task = VersioncheckAsync();
-                return;
             }
-            VersioncheckAsync();
 
             //計數器
             //如果第一次紀錄就先記錄第一次滑鼠x座標
@@ -393,10 +420,13 @@ namespace PMRDC
                     TimeSpan ts = timeminend.Subtract(timeminstr);
                     int tsmin = ts.Minutes;
                     LogapiAsync("idle60", tsmin);
+                    idlecloseSW();
                     ClosePress("6SigmaET");//關閉外部檔案
                     string text60 = "因電腦閒置60分鐘，故將6Sigma關閉。";
                     sigmaFirstOpen = true;
+                    
                     MessageBox.Show(new Form { TopMost = true }, text60);
+
                     return;
                 }
 
@@ -557,13 +587,12 @@ namespace PMRDC
             //當平台開啟時，先預設一些要跑的動作
             //在桌面建立一個捷徑
             delpast6sigma2();
-            bringToFront("LINE.exe");
-            return;
             CreateDesktopShortcut("PMRDC.exe");
             //判斷紀錄LOG的資料夾和檔案是否存在
             Filecheck();
             //紀錄LOG
             logwrite("Open Platform");
+            VersioncheckAsync();
             //判斷平台是否有重複開啟，有的話把先前的全部關掉，留一個並重新啟動
             //delpast6sigma();
             //variblelog();
@@ -577,17 +606,18 @@ namespace PMRDC
             //紀錄開啟平台LOG
             LogapiAsync("OpenPlatform");
             timerStart = true;
-            timer1.Interval = 5000;
+            timer1.Interval = 6000;
             timer1.Enabled = true;
             this.ShowInTaskbar = false;
             textBox1.Text = "start";
             this.notifyIcon1.Text = Version;
+            this.Hide();
 
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            bringToFront("LINE.exe");
+       
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) //當平台要被關閉前，紀錄被關閉
@@ -663,7 +693,9 @@ namespace PMRDC
 
         private void button4_Click_2(object sender, EventArgs e)
         {
-            bringToFront("6SigmaET");
+            
+            
+
         }
     }
 }
