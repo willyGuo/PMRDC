@@ -358,7 +358,7 @@ namespace PMRDC
             logwrite("ClosePlatform");
             timeminPlatformend = DateTime.Now;
             TimeSpan ts = timeminPlatformend.Subtract(timeminPlatformstr);
-            int tsmin = ts.Minutes;
+            int tsmin = (int)ts.TotalMinutes;
             LogapiAsync("ClosePlatform", tsmin);
             this.Dispose();
         }
@@ -418,7 +418,7 @@ namespace PMRDC
                     logwrite("idle60");
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
-                    int tsmin = ts.Minutes;
+                    int tsmin = (int)ts.TotalMinutes;
                     LogapiAsync("idle60", tsmin);
                     idlecloseSW();
                     ClosePress("6SigmaET");//關閉外部檔案
@@ -438,9 +438,8 @@ namespace PMRDC
                 logwrite("userclose6Sigma");
                 timeminend = DateTime.Now;
                 TimeSpan ts = timeminend.Subtract(timeminstr);
-                int tsmin = ts.Minutes;
-                int thour = ts.Hours * 60;
-                LogapiAsync("userclose6Sigma", tsmin + thour);
+                int tsmin = (int)ts.TotalMinutes;
+                LogapiAsync("userclose6Sigma", tsmin);
                 
             }
         }
@@ -630,7 +629,8 @@ namespace PMRDC
                 logwrite("ClosePlatform");
                 timeminPlatformend = DateTime.Now;
                 TimeSpan ts = timeminPlatformend.Subtract(timeminPlatformstr);
-                int tsmin = ts.Minutes;
+                int tsmin = (int)ts.TotalMinutes;
+
                 LogapiAsync("ClosePlatform", tsmin);
             }
             bool Sigma_exist_formC = Simga_existFuc();
@@ -639,9 +639,8 @@ namespace PMRDC
                 logwrite("userclose6Sigma");
                 timeminend = DateTime.Now;
                 TimeSpan ts = timeminend.Subtract(timeminstr);
-                int tsmin = ts.Minutes;
-                int thour = ts.Hours * 60;
-                LogapiAsync("userclose6Sigma", tsmin + thour);
+                int tsmin = (int)ts.TotalMinutes;
+                LogapiAsync("userclose6Sigma", tsmin);
             }
             
         }
