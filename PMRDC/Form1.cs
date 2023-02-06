@@ -72,15 +72,17 @@ namespace PMRDC
         private const UInt32 WM_CLOSE = 0x0010;
         public void idlecloseSW()
         {
-            foreach (Process p in Process.GetProcesses(System.Environment.MachineName))
+            Process[] processlist = Process.GetProcesses();
+
+            foreach (Process process in processlist)
             {
-                if (p.MainWindowHandle != IntPtr.Zero)
+                if (!String.IsNullOrEmpty(process.MainWindowTitle))
                 {
-                    // Display the user name of the program
-                    textBox1.Text += p.ProcessName.ToString() + "\r\n";
-                    if (p.ProcessName.Contains("6SigmaET"))
+                    //textBox1.Text += process.ProcessName + "," + process.Id + "," + process.MainWindowTitle + "\r\n";
+                    if (process.ProcessName.Contains("6SigmaET"))
                     {
-                        bringToFront("6SigmaET");
+                        bringToFront(process.MainWindowTitle);
+                        process.Kill();
                     }
                 }
             }
@@ -98,11 +100,13 @@ namespace PMRDC
             //}
             BringWindowToTop(handle); // 將視窗浮在最上層
             ShowWindow(handle, 3); // 將視窗最大化
+            Thread.Sleep(2000);
             //CloseWindow(handle,4);
             //存檔 且案Enter
             SendKeys.SendWait("^(s)");
-            SendKeys.Send("{ENTER}");
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
+            SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(2000);
             //關閉視窗
             SendMessage(handle, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
 
@@ -605,10 +609,10 @@ namespace PMRDC
             //紀錄開啟平台LOG
             LogapiAsync("OpenPlatform");
             timerStart = true;
-            timer1.Interval = 6000;
+            timer1.Interval = 60000;
             timer1.Enabled = true;
             this.ShowInTaskbar = false;
-            textBox1.Text = "start";
+            //textBox1.Text = "start";
             this.notifyIcon1.Text = Version;
             this.Hide();
 
@@ -661,6 +665,17 @@ namespace PMRDC
 
         private void UpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            DialogResult dr = MessageBox.Show("是否手動執行更新", "版本更新", MessageBoxButtons.OKCancel);
+            if (dr == DialogResult.OK)
+            {
+                VersioncheckAsync();
+            }
+            else if (dr == DialogResult.Cancel)
+            {
+                
+            }
+
+            //VersioncheckAsync();
 
         }
 
@@ -694,6 +709,11 @@ namespace PMRDC
         {
             
             
+
+        }
+
+        private void button4_Click_3(object sender, EventArgs e)
+        {
 
         }
     }
