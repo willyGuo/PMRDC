@@ -51,8 +51,8 @@ namespace PMRDC
         //是否為閒置關閉
         bool idleclose = false;
         int aa;
-        //172.18.212.76/
-        //172.18.212.76
+        //127.0.0.1/
+        //127.0.0.1
         bool sigmaFirstOpen = true;
         string catchexlog = "default";
         [DllImport("user32.dll", SetLastError = true)]
@@ -268,7 +268,7 @@ namespace PMRDC
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新連線後，將資料用post方式回傳
             HttpClient client = new HttpClient();
-            string reponse = await client.GetStringAsync("http://172.18.212.76/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime);
+            string reponse = await client.GetStringAsync("http://127.0.0.1/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime);
             //textBox1.Text = reponse;
 
             return true;
@@ -282,22 +282,13 @@ namespace PMRDC
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新的連線後，打API確認版本號
             HttpClient client = new HttpClient();
-            string reponse = await client.GetStringAsync("http://172.18.212.76/swcheck/PMRDCPlatform/" + Version);
+            string reponse = await client.GetStringAsync("http://127.0.0.1/swcheck/PMRDCPlatform/" + Version);
             Versionclass descJsonVer = JsonConvert.DeserializeObject<Versionclass>(reponse);//反序列化
             //如果版本號不同就強制下載，並關閉目前平台
             if (descJsonVer.user_version != descJsonVer.Now_version)
             {
-                //string alert = "版本更新 ! 確認後自動下載，請執行最新版本";
-                //DialogResult result =  MessageBox.Show(alert);
-                //string myPath = @"D:\test";
-                //System.Diagnostics.Process prc = new System.Diagnostics.Process();
-                //prc.StartInfo.FileName = myPath;
-                //prc.Start();
-                //Process.Start("chrome.EXE", @"http://172.18.212.76/download/detail");
-                string remoteUri = "http://172.18.212.76/media/PMRDCPlatform/";
+                string remoteUri = "http://127.0.0.1/media/PMRDCPlatform/";
                 string fileName = descJsonVer.Downloaduri, myStringWebResource = null;
-                //textBox2.Text = fileName;
-                // Create a new WebClient instance.
                 WebClient myWebClient = new WebClient();
                 // Concatenate the domain with the Web resource filename.
                 myStringWebResource = remoteUri + fileName;
@@ -316,10 +307,10 @@ namespace PMRDC
                 }
            
                 ZipFile.ExtractToDirectory(Application.StartupPath + "/" + descJsonVer.Downloaduri, zippath);
-
+                logwrite("Update from_" + descJsonVer.user_version);
+                LogapiAsync("Update from_" + descJsonVer.user_version);
                 Process PMRDCexe = new Process();
                 // FileName 是要執行的檔案
-                
                 PMRDCexe.StartInfo.FileName = zippath + "/PMRDC.exe";
                 PMRDCexe.Start();
 
@@ -433,9 +424,8 @@ namespace PMRDC
                         ClosePress("6SigmaET");//關閉外部檔案
                         string text60 = "因電腦閒置60分鐘，故將6Sigma關閉。";
                         sigmaFirstOpen = true;
-                    
                         MessageBox.Show(new Form { TopMost = true }, text60);
-
+                        
                         return;
                     }
 
@@ -443,13 +433,13 @@ namespace PMRDC
                 //如果Sigma是關閉的，Sigma也曾經開啟
                 if (!Sigma_exist && sigmaFirstOpen == false)
                 {
-                    sigmaFirstOpen = true;
                     logwrite("userclose6Sigma");
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
                     int tsmin = (int)ts.TotalMinutes;
                     LogapiAsync("userclose6Sigma", tsmin);
-                
+                    sigmaFirstOpen = true;
+
                 }
             }
             catch(Exception ex) {
@@ -659,5 +649,7 @@ namespace PMRDC
         {
 
         }
+
+
     }
 }
