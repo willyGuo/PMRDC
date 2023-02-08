@@ -51,8 +51,8 @@ namespace PMRDC
         //是否為閒置關閉
         bool idleclose = false;
         int aa;
-        //127.0.0.1/
-        //127.0.0.1
+        //172.18.212.76/
+        //172.18.212.76
         bool sigmaFirstOpen = true;
         string catchexlog = "default";
         [DllImport("user32.dll", SetLastError = true)]
@@ -268,7 +268,7 @@ namespace PMRDC
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新連線後，將資料用post方式回傳
             HttpClient client = new HttpClient();
-            string reponse = await client.GetStringAsync("http://127.0.0.1/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime);
+            string reponse = await client.GetStringAsync("http://172.18.212.76/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime);
             //textBox1.Text = reponse;
 
             return true;
@@ -282,12 +282,12 @@ namespace PMRDC
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新的連線後，打API確認版本號
             HttpClient client = new HttpClient();
-            string reponse = await client.GetStringAsync("http://127.0.0.1/swcheck/PMRDCPlatform/" + Version);
+            string reponse = await client.GetStringAsync("http://172.18.212.76/swcheck/PMRDCPlatform/" + Version);
             Versionclass descJsonVer = JsonConvert.DeserializeObject<Versionclass>(reponse);//反序列化
             //如果版本號不同就強制下載，並關閉目前平台
             if (descJsonVer.user_version != descJsonVer.Now_version)
             {
-                string remoteUri = "http://127.0.0.1/media/PMRDCPlatform/";
+                string remoteUri = "http://172.18.212.76/media/PMRDCPlatform/";
                 string fileName = descJsonVer.Downloaduri, myStringWebResource = null;
                 WebClient myWebClient = new WebClient();
                 // Concatenate the domain with the Web resource filename.
@@ -352,12 +352,6 @@ namespace PMRDC
 
         private void button3_Click(object sender, EventArgs e)
         {
-            //取消按鍵，先記錄關閉的log後(本地 & Server)，在關閉
-            logwrite("ClosePlatform");
-            timeminPlatformend = DateTime.Now;
-            TimeSpan ts = timeminPlatformend.Subtract(timeminPlatformstr);
-            int tsmin = (int)ts.TotalMinutes;
-            LogapiAsync("ClosePlatform", tsmin);
             this.Dispose();
         }
 
@@ -445,7 +439,7 @@ namespace PMRDC
             catch(Exception ex) {
                 if(catchexlog != ex.Message)
                 {
-                    logwrite(ex.Message);
+                    logwrite(ex.ToString());
                     LogapiAsync(ex.Message, 0);
                     catchexlog = ex.Message;
                 }
