@@ -37,7 +37,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230208";
+        string Version = "v20230209e";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -106,9 +106,9 @@ namespace PMRDC
             Thread.Sleep(2000);
             //CloseWindow(handle,4);
             //存檔 且案Enter
-            SendKeys.SendWait("^(s)");
-            Thread.Sleep(2000);
-            SendKeys.SendWait("{ENTER}");
+            //SendKeys.SendWait("^(s)");
+            //Thread.Sleep(2000);
+            //SendKeys.SendWait("{ENTER}");
             Thread.Sleep(2000);
             //關閉視窗
             //SendMessage(handle, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
@@ -517,13 +517,17 @@ namespace PMRDC
 
             //當平台開啟時，先預設一些要跑的動作
             //在桌面建立一個捷徑
+            this.notifyIcon1.Text = Version;
+            this.Hide();
+            VersioncheckAsync();
+            Thread.Sleep(5000);
             delpast6sigma2();
             CreateDesktopShortcut("PMRDC.exe");
             //判斷紀錄LOG的資料夾和檔案是否存在
             Filecheck();
             //紀錄LOG
             logwrite("Open Platform");
-            VersioncheckAsync();
+
             //判斷平台是否有重複開啟，有的話把先前的全部關掉，留一個並重新啟動
             //delpast6sigma();
             //variblelog();
@@ -541,8 +545,8 @@ namespace PMRDC
             timer1.Enabled = true;
             this.ShowInTaskbar = false;
             //textBox1.Text = "start";
-            this.notifyIcon1.Text = Version;
-            this.Hide();
+            
+            
 
         }
 
@@ -592,17 +596,17 @@ namespace PMRDC
 
         private void UpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("是否手動執行更新", "版本更新", MessageBoxButtons.OKCancel);
-            if (dr == DialogResult.OK)
-            {
-                VersioncheckAsync();
-            }
-            else if (dr == DialogResult.Cancel)
-            {
-                
-            }
+            //DialogResult dr = MessageBox.Show("是否手動執行更新", "版本更新", MessageBoxButtons.OKCancel);
+            //if (dr == DialogResult.OK)
+            //{
+            //    textBox2.Text = "yes";
+            //}
+            //else if (dr == DialogResult.Cancel)
+            //{
+            //    textBox2.Text = "NO";
+            //}
 
-            //VersioncheckAsync();
+            
 
         }
 
