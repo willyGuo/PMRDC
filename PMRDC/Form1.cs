@@ -380,7 +380,7 @@ namespace PMRDC
             textBox1reapeat.Text = xrepeat.ToString();
             DateTime nowtime = DateTime.Now;
             if (nowtime.ToString("HH:mm") == "13:00" || nowtime.ToString("HH:mm") =="13:01" 
-                || nowtime.ToString("HH:mm") == "17:01" || nowtime.ToString("HH:mm") == "17:01")
+                || nowtime.ToString("HH:mm") == "17:00" || nowtime.ToString("HH:mm") == "17:01")
             {
                 VersioncheckAsync();
             }
