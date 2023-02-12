@@ -516,10 +516,10 @@ namespace PMRDC
             timerStart = true;
             timer1.Interval = 60000;
             timer1.Enabled = true;
-            //this.ShowInTaskbar = false;
+            this.ShowInTaskbar = false;
             //textBox1.Text = "start";
             this.notifyIcon1.Text = Version;
-            //this.Hide();
+            this.Hide();
 
         }
 
