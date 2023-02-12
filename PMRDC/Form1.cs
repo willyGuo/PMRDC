@@ -413,7 +413,7 @@ namespace PMRDC
                 {
                     Pastx = Nowx;
                     Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
-                    if (Pastx == Nowx)
+                    if (Pastx == Nowx || Pastx == 0)
                     {
                         ++xrepeat;
                     }
@@ -514,12 +514,12 @@ namespace PMRDC
             //紀錄開啟平台LOG
             LogapiAsync("OpenPlatform");
             timerStart = true;
-            timer1.Interval = 60000;
+            timer1.Interval = 1000;
             timer1.Enabled = true;
-            this.ShowInTaskbar = false;
+            //this.ShowInTaskbar = false;
             //textBox1.Text = "start";
             this.notifyIcon1.Text = Version;
-            this.Hide();
+            //this.Hide();
 
         }
 
