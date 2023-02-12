@@ -50,7 +50,7 @@ namespace PMRDC
         //不知道為啥關閉log會寫三筆，所以用這個判斷寫一次就好
         int closePlatformCount = 0;
         //是否為閒置關閉
-        bool idleclose = false;
+        bool sigmacheck = false;
         int aa =0;
         string processname;
         //172.18.212.76/
@@ -375,6 +375,7 @@ namespace PMRDC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            textBox1xsition.Text += (string.Format("{0}", System.Windows.Forms.Cursor.Position.X) + "\r\n");
             textBox2timer.Text = aa.ToString();
             ++aa;
             textBox1reapeat.Text = xrepeat.ToString();
@@ -394,6 +395,7 @@ namespace PMRDC
             //如果Sigma有打開，就在執行
             if (Sigma_exist)
             {
+                sigmacheck = true;
                 //如果Sigma是打開的，那就判斷是否曾經打開過
                 //如果沒打開過，就紀錄第一次X，且判斷程已打開過
                 if (sigmaFirstOpen == true)
@@ -450,6 +452,7 @@ namespace PMRDC
             //如果Sigma是關閉的，Sigma也曾經開啟
             if (!Sigma_exist && sigmaFirstOpen == false)
             {
+                sigmacheck= false;
                 logwrite("userclose6Sigma");
                 timeminend = DateTime.Now;
                 TimeSpan ts = timeminend.Subtract(timeminstr);
@@ -466,7 +469,8 @@ namespace PMRDC
 
         void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
-            if(e.Mode.ToString() == "Suspend")
+            textBox1_cmstatus.Text += (e.Mode.ToString() + "\r\n");
+            if (e.Mode.ToString() == "Suspend" && xrepeat == 30)
             {
                 Sigma_exist = Simga_existFuc();
                 if (Sigma_exist)
@@ -512,10 +516,10 @@ namespace PMRDC
             timerStart = true;
             timer1.Interval = 60000;
             timer1.Enabled = true;
-            this.ShowInTaskbar = false;
+            //this.ShowInTaskbar = false;
             //textBox1.Text = "start";
             this.notifyIcon1.Text = Version;
-            this.Hide();
+            //this.Hide();
 
         }
 
@@ -524,7 +528,8 @@ namespace PMRDC
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) //當平台要被關閉前，紀錄被關閉
         {
             Sigma_exist = Simga_existFuc();
-            if (Sigma_exist) 
+            //如果平台關閉之前，sigma還是開著;或是sigma被打開，但沒紀錄到關掉
+            if (Sigma_exist == true || sigmacheck == true) 
             { 
                 logwrite("userclose6Sigma");
                 timeminend = DateTime.Now;

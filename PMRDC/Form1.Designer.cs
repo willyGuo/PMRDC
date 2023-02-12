@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
@@ -46,6 +45,10 @@
             this.textBox1reapeat = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox2timer = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBox1_cmstatus = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBox1xsition = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,33 +61,20 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Khaki;
             this.label1.Font = new System.Drawing.Font("微軟正黑體", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(75, 92);
+            this.label1.Location = new System.Drawing.Point(28, 37);
+            this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(610, 76);
+            this.label1.Size = new System.Drawing.Size(243, 30);
             this.label1.TabIndex = 2;
             this.label1.Text = "PMRDC程式登入平台";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(176, 735);
-            this.label4.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(1346, 150);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "* 依軟體使用辦法，請勿長時間占用\r\n* 若有急需使用軟體，但無License情況請聯絡RDPM(Marcus Kuo #33930)\r\n* 平台使用問題請聯絡W" +
-    "illy Guo(#32725)";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label5.Location = new System.Drawing.Point(1232, 120);
-            this.label5.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label5.Location = new System.Drawing.Point(462, 48);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(133, 42);
+            this.label5.Size = new System.Drawing.Size(53, 17);
             this.label5.TabIndex = 5;
             this.label5.Text = "使用者 :";
             // 
@@ -93,10 +83,9 @@
             this.button3.BackColor = System.Drawing.Color.White;
             this.button3.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.button3.ForeColor = System.Drawing.Color.SteelBlue;
-            this.button3.Location = new System.Drawing.Point(752, 960);
-            this.button3.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.button3.Location = new System.Drawing.Point(282, 384);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(229, 75);
+            this.button3.Size = new System.Drawing.Size(86, 30);
             this.button3.TabIndex = 6;
             this.button3.Text = "退出";
             this.button3.UseVisualStyleBackColor = false;
@@ -117,7 +106,7 @@
             this.closemeun,
             this.helpmeun});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(223, 146);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(142, 142);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // reloadmeun
@@ -133,7 +122,7 @@
             // 
             this.closemeun.Image = global::PMRDC.Properties.Resources.update;
             this.closemeun.Name = "closemeun";
-            this.closemeun.Size = new System.Drawing.Size(222, 48);
+            this.closemeun.Size = new System.Drawing.Size(141, 46);
             this.closemeun.Text = "Update";
             this.closemeun.Click += new System.EventHandler(this.UpdateToolStripMenuItem_Click);
             // 
@@ -141,7 +130,7 @@
             // 
             this.helpmeun.Image = ((System.Drawing.Image)(resources.GetObject("helpmeun.Image")));
             this.helpmeun.Name = "helpmeun";
-            this.helpmeun.Size = new System.Drawing.Size(222, 48);
+            this.helpmeun.Size = new System.Drawing.Size(141, 46);
             this.helpmeun.Text = "Help";
             this.helpmeun.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             this.helpmeun.Paint += new System.Windows.Forms.PaintEventHandler(this.helpmeun_Paint);
@@ -150,19 +139,19 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label6.Location = new System.Drawing.Point(1232, 178);
-            this.label6.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label6.Location = new System.Drawing.Point(462, 71);
             this.label6.Name = "label6";
             this.label6.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.label6.Size = new System.Drawing.Size(100, 42);
+            this.label6.Size = new System.Drawing.Size(40, 17);
             this.label6.TabIndex = 8;
             this.label6.Text = "版本 :";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(394, 420);
+            this.button1.Location = new System.Drawing.Point(51, 374);
+            this.button1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(222, 75);
+            this.button1.Size = new System.Drawing.Size(83, 30);
             this.button1.TabIndex = 9;
             this.button1.Text = "test";
             this.button1.UseVisualStyleBackColor = true;
@@ -171,43 +160,89 @@
             // label2xrepeat
             // 
             this.label2xrepeat.AutoSize = true;
-            this.label2xrepeat.Location = new System.Drawing.Point(826, 381);
+            this.label2xrepeat.Location = new System.Drawing.Point(451, 135);
+            this.label2xrepeat.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label2xrepeat.Name = "label2xrepeat";
-            this.label2xrepeat.Size = new System.Drawing.Size(107, 30);
+            this.label2xrepeat.Size = new System.Drawing.Size(43, 12);
             this.label2xrepeat.TabIndex = 10;
             this.label2xrepeat.Text = "xRepeat";
             // 
             // textBox1reapeat
             // 
-            this.textBox1reapeat.Location = new System.Drawing.Point(952, 378);
+            this.textBox1reapeat.Location = new System.Drawing.Point(498, 134);
+            this.textBox1reapeat.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox1reapeat.Multiline = true;
             this.textBox1reapeat.Name = "textBox1reapeat";
-            this.textBox1reapeat.Size = new System.Drawing.Size(206, 43);
+            this.textBox1reapeat.Size = new System.Drawing.Size(80, 20);
             this.textBox1reapeat.TabIndex = 11;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(826, 308);
+            this.label3.Location = new System.Drawing.Point(451, 106);
+            this.label3.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(82, 30);
+            this.label3.Size = new System.Drawing.Size(33, 12);
             this.label3.TabIndex = 12;
             this.label3.Text = "Timer";
             // 
             // textBox2timer
             // 
-            this.textBox2timer.Location = new System.Drawing.Point(952, 305);
+            this.textBox2timer.Location = new System.Drawing.Point(498, 105);
+            this.textBox2timer.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox2timer.Multiline = true;
             this.textBox2timer.Name = "textBox2timer";
-            this.textBox2timer.Size = new System.Drawing.Size(206, 43);
+            this.textBox2timer.Size = new System.Drawing.Size(80, 20);
             this.textBox2timer.TabIndex = 13;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(31, 105);
+            this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(53, 12);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "電腦狀態";
+            // 
+            // textBox1_cmstatus
+            // 
+            this.textBox1_cmstatus.Location = new System.Drawing.Point(33, 140);
+            this.textBox1_cmstatus.Margin = new System.Windows.Forms.Padding(1);
+            this.textBox1_cmstatus.Multiline = true;
+            this.textBox1_cmstatus.Name = "textBox1_cmstatus";
+            this.textBox1_cmstatus.Size = new System.Drawing.Size(152, 185);
+            this.textBox1_cmstatus.TabIndex = 15;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(238, 105);
+            this.label4.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(35, 12);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "x座標";
+            // 
+            // textBox1xsition
+            // 
+            this.textBox1xsition.Location = new System.Drawing.Point(240, 140);
+            this.textBox1xsition.Margin = new System.Windows.Forms.Padding(1);
+            this.textBox1xsition.Multiline = true;
+            this.textBox1xsition.Name = "textBox1xsition";
+            this.textBox1xsition.Size = new System.Drawing.Size(152, 185);
+            this.textBox1xsition.TabIndex = 17;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 30F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SteelBlue;
-            this.ClientSize = new System.Drawing.Size(1683, 1060);
+            this.ClientSize = new System.Drawing.Size(631, 424);
+            this.Controls.Add(this.textBox1xsition);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.textBox1_cmstatus);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox2timer);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox1reapeat);
@@ -216,10 +251,9 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -234,7 +268,6 @@
 
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
@@ -248,5 +281,9 @@
         private System.Windows.Forms.TextBox textBox1reapeat;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox2timer;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox textBox1_cmstatus;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBox1xsition;
     }
 }
