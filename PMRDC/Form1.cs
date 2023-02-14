@@ -15,7 +15,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PMRDC
 {
@@ -38,7 +37,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230213";
+        string Version = "v20230214";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -51,11 +50,14 @@ namespace PMRDC
         int closePlatformCount = 0;
         //是否為閒置關閉
         bool sigmacheck = false;
+        int suspendxrepeat;
         int aa =0;
         string processname;
         //172.18.212.76/
         //172.18.212.76
         bool sigmaFirstOpen = true;
+        DateTime suspendtimestr;
+        DateTime suspendtimeend;
         string catchexlog = "default";
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool BringWindowToTop(IntPtr hWnd);
@@ -239,6 +241,7 @@ namespace PMRDC
                 //WriteLine為換行 
                 sw.Write(nowTime + " " + Version + " : ");
                 sw.WriteLine(logmsg);
+                sw.Dispose();
 
             }
         }
@@ -295,7 +298,9 @@ namespace PMRDC
 
         public async Task<bool> VersioncheckAsync()
         {
-     
+
+
+
             //平台開始時，確認是否有新的版本要更新
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新的連線後，打API確認版本號
@@ -305,25 +310,38 @@ namespace PMRDC
             //如果版本號不同就強制下載，並關閉目前平台
             if (descJsonVer.user_version != descJsonVer.Now_version)
             {
-                string remoteUri = "http://172.18.212.76/media/PMRDCPlatform/";
-                string fileName = descJsonVer.Downloaduri, myStringWebResource = null;
-                WebClient myWebClient = new WebClient();
-                // Concatenate the domain with the Web resource filename.
-                myStringWebResource = remoteUri + fileName;
-                // Download the Web resource and save it into the current filesystem folder.
-                myWebClient.DownloadFile(myStringWebResource, fileName);
-                string zippath = Environment.GetFolderPath(Environment.SpecialFolder.Startup).Replace("Startup", "PMRDC/" + descJsonVer.Now_version);
-                if (Directory.Exists(zippath))
+                Sigma_exist = Simga_existFuc();
+                if (Sigma_exist && sigmacheck)
                 {
-                    DirectoryInfo directory = new DirectoryInfo(zippath);
-                    directory.Delete(true);
+                    timeminend = DateTime.Now;
+                    TimeSpan ts = timeminend.Subtract(timeminstr);
+                    int tsmin = (int)ts.TotalMinutes;
+                    logwrite("userclose6Sigma");
+                    LogapiAsync("userclose6Sigma", tsmin);
+                    //ClosePress("6SigmaET");//關閉外部檔案
+                    sigmaFirstOpen = true;
+                }
+                string zippath = Environment.GetFolderPath(Environment.SpecialFolder.Startup).Replace("Startup", "PMRDC/" + descJsonVer.Now_version);
+                int tempi = 1;
+                while(Directory.Exists(zippath))
+                {
+                    zippath = Environment.GetFolderPath(Environment.SpecialFolder.Startup).Replace("Startup", "PMRDC/" + descJsonVer.Now_version +"_"+ tempi.ToString());
+                    tempi++;
                 }
                 if (!Directory.Exists(zippath))
                 {
                     //建立資料夾
                     Directory.CreateDirectory(zippath);
                 }
-           
+                int titleindex = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.IndexOf("PMRDC.exe");
+                string notitlepath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Remove(titleindex);
+                string remoteUri = @"http://172.18.212.76/media/PMRDCPlatform";
+                string fileName = descJsonVer.Downloaduri, myStringWebResource = null;
+                WebClient myWebClient = new WebClient();
+                myStringWebResource = Path.Combine(remoteUri, fileName);
+                string targetsave = Path.Combine(notitlepath, fileName);
+                myWebClient.DownloadFile(myStringWebResource, targetsave);
+
                 ZipFile.ExtractToDirectory(Application.StartupPath + "/" + descJsonVer.Downloaduri, zippath);
                 logwrite("Update from_" + descJsonVer.user_version);
                 LogapiAsync("Update from_" + descJsonVer.user_version);
@@ -331,8 +349,7 @@ namespace PMRDC
                 // FileName 是要執行的檔案
                 PMRDCexe.StartInfo.FileName = zippath + "/PMRDC.exe";
                 PMRDCexe.Start();
-
-                //this.Dispose();
+                System.Environment.Exit(0);
             }
             return true;
         }
@@ -375,15 +392,14 @@ namespace PMRDC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            textBox1xsition.Text += (string.Format("{0}", System.Windows.Forms.Cursor.Position.X) + "\r\n");
-            textBox2timer.Text = aa.ToString();
-            ++aa;
-            textBox1reapeat.Text = xrepeat.ToString();
+            //textBox1xsition.Text += (string.Format("{0}", System.Windows.Forms.Cursor.Position.X) + "\r\n");
+            //textBox2timer.Text = aa.ToString();
+            //++aa;
+            //textBox1reapeat.Text = xrepeat.ToString();
             DateTime nowtime = DateTime.Now;
-            if (nowtime.ToString("HH:mm") == "13:00" || nowtime.ToString("HH:mm") =="13:01" 
-                || nowtime.ToString("HH:mm") == "17:00" || nowtime.ToString("HH:mm") == "17:01")
+            if (nowtime.ToString("HH:mm") == "13:00" || nowtime.ToString("HH:mm") == "17:00")
             {
-                VersioncheckAsync();
+                Task<bool> task = VersioncheckAsync();
             }
 
             //計數器
@@ -469,7 +485,7 @@ namespace PMRDC
 
         void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
-            textBox1_cmstatus.Text += (e.Mode.ToString() + "\r\n");
+            //textBox1_cmstatus.Text += (e.Mode.ToString() + "\r\n");
             if (e.Mode.ToString() == "Suspend" && xrepeat == 30)
             {
                 Sigma_exist = Simga_existFuc();
@@ -487,20 +503,50 @@ namespace PMRDC
                     MessageBox.Show(new Form { TopMost = true }, text60);
                 }
             }
+            if(e.Mode.ToString() == "Suspend")
+            {
+                suspendtimestr = DateTime.Now;
+                suspendxrepeat = xrepeat;
+                //textBox1sleepbefore.Text = suspendxrepeat.ToString();
+            }
+            if(e.Mode.ToString() == "Resume")
+            {
+                suspendtimeend = DateTime.Now;
+                try
+                {
+                    TimeSpan ts = suspendtimeend.Subtract(suspendtimestr);
+                    int tsmin = (int)ts.TotalMinutes;
+                    int totsuspendtimeandxrepeat = tsmin + suspendxrepeat;
+                    //textBox1sleeptime.Text = tsmin.ToString();
+                    //textBox2totalsleepandxrepeat.Text = totsuspendtimeandxrepeat.ToString();
+                    if (totsuspendtimeandxrepeat > 60)
+                    {
+                        logwrite("SleepOver60min");
+                        LogapiAsync("SleepOver60min", totsuspendtimeandxrepeat);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logwrite(ex.ToString());
+                    LogapiAsync(ex.Message + ": 紀錄睡眠錯誤", 0);
+                }
+            }
         }
         private void Form1_Load_1(object sender, EventArgs e)
         {
             SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
             //當平台開啟時，先預設一些要跑的動作
             //在桌面建立一個捷徑
+            this.notifyIcon1.Text = Version;
+            Thread.Sleep(5000);
             delpast6sigma2();
             //判斷紀錄LOG的資料夾和檔案是否存在
             Filecheck();
             CreateDesktopShortcut("PMRDC.exe");
             //紀錄LOG
             logwrite("Open Platform");
-            VersioncheckAsync();
-            
+            Task<bool> task = VersioncheckAsync();
+
             //判斷平台是否有重複開啟，有的話把先前的全部關掉，留一個並重新啟動
             //delpast6sigma();
             //variblelog();
@@ -514,12 +560,10 @@ namespace PMRDC
             //紀錄開啟平台LOG
             LogapiAsync("OpenPlatform");
             timerStart = true;
-            timer1.Interval = 1000;
+            timer1.Interval = 60000;
             timer1.Enabled = true;
-            //this.ShowInTaskbar = false;
-            //textBox1.Text = "start";
-            this.notifyIcon1.Text = Version;
-            //this.Hide();
+            this.ShowInTaskbar = false;
+            this.Hide();
 
         }
 
@@ -528,14 +572,17 @@ namespace PMRDC
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) //當平台要被關閉前，紀錄被關閉
         {
             Sigma_exist = Simga_existFuc();
+            logwrite("測試是否關閉且記錄到log");
             //如果平台關閉之前，sigma還是開著;或是sigma被打開，但沒紀錄到關掉
-            if (Sigma_exist == true || sigmacheck == true) 
+            if ((Sigma_exist == true || sigmacheck == true) && timeminstr.ToString("yyyy") != "0001") 
             { 
                 logwrite("userclose6Sigma");
                 timeminend = DateTime.Now;
                 TimeSpan ts = timeminend.Subtract(timeminstr);
                 int tsmin = (int)ts.TotalMinutes;
                 LogapiAsync("userclose6Sigma", tsmin);
+
+                
             }
             logwrite("ClosePlatform");
             timeminend = DateTime.Now;
@@ -549,6 +596,22 @@ namespace PMRDC
         private void ReloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string textrrload = "重載成功!";
+            logwrite("ClosePlatform");
+            timeminend = DateTime.Now;
+            TimeSpan ts_p = timeminend.Subtract(timeminPlatformstr);
+            int tsmin_p = (int)ts_p.TotalMinutes;
+            LogapiAsync("ClosePlatform", tsmin_p);
+            Sigma_exist = Simga_existFuc();
+            if (Sigma_exist && sigmacheck)
+            {
+                timeminend = DateTime.Now;
+                TimeSpan ts = timeminend.Subtract(timeminstr);
+                int tsmin = (int)ts.TotalMinutes;
+                logwrite("userclose6Sigma");
+                LogapiAsync("userclose6Sigma", tsmin);
+                //ClosePress("6SigmaET");//關閉外部檔案
+                sigmaFirstOpen = true;
+            }
             MessageBox.Show(new Form { TopMost = true }, textrrload);
             System.Windows.Forms.Application.Restart();
         }
@@ -559,6 +622,11 @@ namespace PMRDC
             if (dr == DialogResult.OK)
             {
                 Task<bool> task = VersioncheckAsync();
+                //Process PMRDCexe = new Process();
+                //// FileName 是要執行的檔案
+                //PMRDCexe.StartInfo.FileName = this.GetType().Assembly.Location;
+                //PMRDCexe.Start();
+                
             }
             else if (dr == DialogResult.Cancel)
             {
