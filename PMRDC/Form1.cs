@@ -476,7 +476,6 @@ namespace PMRDC
                 int tsmin = (int)ts.TotalMinutes - totolsleeptime;
                 LogapiAsync("userclose6Sigma", tsmin);
                 sigmaFirstOpen = true;
-
             }
        
 
@@ -487,10 +486,12 @@ namespace PMRDC
         void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
             //textBox1_cmstatus.Text += (e.Mode.ToString() + "\r\n");
-            if (e.Mode.ToString() == "Suspend" && xrepeat == 30)
+            Sigma_exist = Simga_existFuc();
+            if(e.Mode.ToString() == "Suspend")
             {
-                Sigma_exist = Simga_existFuc();
-                if (Sigma_exist)
+                suspendtimestr = DateTime.Now;
+                suspendxrepeat = xrepeat;
+                if (xrepeat == 30 && Sigma_exist)
                 {
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
@@ -503,11 +504,17 @@ namespace PMRDC
                     sigmaFirstOpen = true;
                     MessageBox.Show(new Form { TopMost = true }, text60);
                 }
-            }
-            if(e.Mode.ToString() == "Suspend")
-            {
-                suspendtimestr = DateTime.Now;
-                suspendxrepeat = xrepeat;
+
+                if (!Sigma_exist && sigmaFirstOpen == false)
+                {
+                    sigmacheck = false;
+                    logwrite("userclose6Sigma");
+                    timeminend = DateTime.Now;
+                    TimeSpan ts = timeminend.Subtract(timeminstr);
+                    int tsmin = (int)ts.TotalMinutes - totolsleeptime;
+                    LogapiAsync("userclose6Sigma", tsmin);
+                    sigmaFirstOpen = true;
+                }
                 //textBox1sleepbefore.Text = suspendxrepeat.ToString();
             }
             if(e.Mode.ToString() == "Resume")
