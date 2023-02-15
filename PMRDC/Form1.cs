@@ -37,7 +37,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230214";
+        string Version = "v20230215";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -58,6 +58,7 @@ namespace PMRDC
         bool sigmaFirstOpen = true;
         DateTime suspendtimestr;
         DateTime suspendtimeend;
+        int totolsleeptime = 0;
         string catchexlog = "default";
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool BringWindowToTop(IntPtr hWnd);
@@ -472,7 +473,7 @@ namespace PMRDC
                 logwrite("userclose6Sigma");
                 timeminend = DateTime.Now;
                 TimeSpan ts = timeminend.Subtract(timeminstr);
-                int tsmin = (int)ts.TotalMinutes;
+                int tsmin = (int)ts.TotalMinutes - totolsleeptime;
                 LogapiAsync("userclose6Sigma", tsmin);
                 sigmaFirstOpen = true;
 
@@ -516,6 +517,7 @@ namespace PMRDC
                 {
                     TimeSpan ts = suspendtimeend.Subtract(suspendtimestr);
                     int tsmin = (int)ts.TotalMinutes;
+                    totolsleeptime += tsmin;
                     int totsuspendtimeandxrepeat = tsmin + suspendxrepeat;
                     //textBox1sleeptime.Text = tsmin.ToString();
                     //textBox2totalsleepandxrepeat.Text = totsuspendtimeandxrepeat.ToString();
