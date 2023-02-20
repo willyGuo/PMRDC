@@ -52,6 +52,7 @@ namespace PMRDC
         int closePlatformCount = 0;
         //是否為閒置關閉
         bool sigmacheck = false;
+        string oaname = Environment.MachineName;
         int suspendxrepeat;
         int aa =0;
         string updatemin;
@@ -293,7 +294,7 @@ namespace PMRDC
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新連線後，將資料用post方式回傳
             HttpClient client = new HttpClient();
-            string reponse = await client.GetStringAsync("http://172.18.212.76/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime + "/" + Environment.MachineName);
+            string reponse = await client.GetStringAsync("http://172.18.212.76/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime + "/" + oaname);
             //textBox1.Text = reponse;
 
             return true;
@@ -588,7 +589,6 @@ namespace PMRDC
             this.ShowInTaskbar = false;
             this.Hide();
             updatemin = nametitle();
-            textBox3.Text = Environment.MachineName;
         }
 
 
