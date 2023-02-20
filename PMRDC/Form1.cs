@@ -10,11 +10,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PMRDC
 {
@@ -37,7 +39,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230215a";
+        string Version = "v20230220a";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -52,6 +54,7 @@ namespace PMRDC
         bool sigmacheck = false;
         int suspendxrepeat;
         int aa =0;
+        string updatemin;
         string processname;
         //172.18.212.76/
         //172.18.212.76
@@ -390,6 +393,13 @@ namespace PMRDC
         {
             this.Dispose();
         }
+        public string nametitle()
+        {
+            string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            char str1 = aryUserInfo[1].ToUpper().FirstOrDefault();
+            int asciicode = ((int)str1 - 65)%3;
+            return asciicode.ToString();
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -398,7 +408,7 @@ namespace PMRDC
             //++aa;
             //textBox1reapeat.Text = xrepeat.ToString();
             DateTime nowtime = DateTime.Now;
-            if (nowtime.ToString("HH:mm") == "13:00" || nowtime.ToString("HH:mm") == "17:00")
+            if (nowtime.ToString("HH:mm") == ("13:0"+ updatemin) || nowtime.ToString("HH:mm") == ("17:0" + updatemin))
             {
                 Task<bool> task = VersioncheckAsync();
             }
@@ -460,6 +470,7 @@ namespace PMRDC
                     //ClosePress("6SigmaET");//關閉外部檔案
                     string text60 = "因電腦閒置60分鐘，故將6Sigma關閉。";
                     sigmaFirstOpen = true;
+                    totolsleeptime = 0;
                     MessageBox.Show(new Form { TopMost = true }, text60);
                         
                     return;
@@ -476,6 +487,7 @@ namespace PMRDC
                 int tsmin = (int)ts.TotalMinutes - totolsleeptime;
                 LogapiAsync("userclose6Sigma", tsmin);
                 sigmaFirstOpen = true;
+                totolsleeptime = 0;
             }
        
 
@@ -491,7 +503,7 @@ namespace PMRDC
             {
                 suspendtimestr = DateTime.Now;
                 suspendxrepeat = xrepeat;
-                if (xrepeat == 30 && Sigma_exist)
+                if (xrepeat > 30 && Sigma_exist)
                 {
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
@@ -508,6 +520,7 @@ namespace PMRDC
                 if (!Sigma_exist && sigmaFirstOpen == false)
                 {
                     sigmacheck = false;
+                    totolsleeptime = 0;
                     logwrite("userclose6Sigma");
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
@@ -520,12 +533,13 @@ namespace PMRDC
             if(e.Mode.ToString() == "Resume")
             {
                 suspendtimeend = DateTime.Now;
+                TimeSpan ts = suspendtimeend.Subtract(suspendtimestr);
+                int tsmin = (int)ts.TotalMinutes;
+                totolsleeptime += tsmin;
+                int totsuspendtimeandxrepeat = tsmin + suspendxrepeat;
+                LogapiAsync("SleepOver60mincheck", totsuspendtimeandxrepeat);
                 try
                 {
-                    TimeSpan ts = suspendtimeend.Subtract(suspendtimestr);
-                    int tsmin = (int)ts.TotalMinutes;
-                    totolsleeptime += tsmin;
-                    int totsuspendtimeandxrepeat = tsmin + suspendxrepeat;
                     //textBox1sleeptime.Text = tsmin.ToString();
                     //textBox2totalsleepandxrepeat.Text = totsuspendtimeandxrepeat.ToString();
                     if (totsuspendtimeandxrepeat > 60)
@@ -573,7 +587,7 @@ namespace PMRDC
             timer1.Enabled = true;
             this.ShowInTaskbar = false;
             this.Hide();
-
+            updatemin = nametitle();
         }
 
 
@@ -681,5 +695,7 @@ namespace PMRDC
             sigmaFirstOpen = true;
             MessageBox.Show(new Form { TopMost = true }, text60);
         }
+
+
     }
 }

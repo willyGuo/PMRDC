@@ -59,6 +59,7 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox3path = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,7 +95,7 @@
             this.button3.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.button3.ForeColor = System.Drawing.Color.SteelBlue;
             this.button3.Location = new System.Drawing.Point(752, 960);
-            this.button3.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.button3.Margin = new System.Windows.Forms.Padding(8);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(229, 75);
             this.button3.TabIndex = 6;
@@ -332,12 +333,21 @@
             this.label10.TabIndex = 27;
             this.label10.Text = "檔案路徑";
             // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(752, 94);
+            this.textBox3.Multiline = true;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(250, 74);
+            this.textBox3.TabIndex = 28;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SteelBlue;
             this.ClientSize = new System.Drawing.Size(1683, 1060);
+            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.textBox3path);
             this.Controls.Add(this.textBox2);
@@ -404,5 +414,6 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox3path;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
