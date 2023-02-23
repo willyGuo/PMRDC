@@ -72,7 +72,8 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Khaki;
             this.label1.Font = new System.Drawing.Font("微軟正黑體", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(75, 92);
+            this.label1.Location = new System.Drawing.Point(28, 37);
+            this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(610, 76);
             this.label1.TabIndex = 2;
@@ -82,8 +83,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label5.Location = new System.Drawing.Point(1232, 120);
-            this.label5.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label5.Location = new System.Drawing.Point(462, 48);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(133, 42);
             this.label5.TabIndex = 5;
@@ -94,10 +94,9 @@
             this.button3.BackColor = System.Drawing.Color.White;
             this.button3.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.button3.ForeColor = System.Drawing.Color.SteelBlue;
-            this.button3.Location = new System.Drawing.Point(752, 960);
-            this.button3.Margin = new System.Windows.Forms.Padding(8);
+            this.button3.Location = new System.Drawing.Point(282, 384);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(229, 75);
+            this.button3.Size = new System.Drawing.Size(86, 30);
             this.button3.TabIndex = 6;
             this.button3.Text = "退出";
             this.button3.UseVisualStyleBackColor = false;
@@ -152,8 +151,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label6.Location = new System.Drawing.Point(1232, 178);
-            this.label6.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label6.Location = new System.Drawing.Point(462, 71);
             this.label6.Name = "label6";
             this.label6.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label6.Size = new System.Drawing.Size(100, 42);
@@ -162,10 +160,10 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(136, 935);
-            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button1.Location = new System.Drawing.Point(51, 374);
+            this.button1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(221, 75);
+            this.button1.Size = new System.Drawing.Size(83, 30);
             this.button1.TabIndex = 9;
             this.button1.Text = "test";
             this.button1.UseVisualStyleBackColor = true;
@@ -174,179 +172,188 @@
             // label2xrepeat
             // 
             this.label2xrepeat.AutoSize = true;
-            this.label2xrepeat.Location = new System.Drawing.Point(1203, 338);
+            this.label2xrepeat.Location = new System.Drawing.Point(451, 135);
+            this.label2xrepeat.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label2xrepeat.Name = "label2xrepeat";
-            this.label2xrepeat.Size = new System.Drawing.Size(107, 30);
+            this.label2xrepeat.Size = new System.Drawing.Size(45, 13);
             this.label2xrepeat.TabIndex = 10;
             this.label2xrepeat.Text = "xRepeat";
             // 
             // textBox1reapeat
             // 
-            this.textBox1reapeat.Location = new System.Drawing.Point(1328, 335);
-            this.textBox1reapeat.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox1reapeat.Location = new System.Drawing.Point(498, 134);
+            this.textBox1reapeat.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox1reapeat.Multiline = true;
             this.textBox1reapeat.Name = "textBox1reapeat";
-            this.textBox1reapeat.Size = new System.Drawing.Size(207, 44);
+            this.textBox1reapeat.Size = new System.Drawing.Size(80, 20);
             this.textBox1reapeat.TabIndex = 11;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1203, 265);
+            this.label3.Location = new System.Drawing.Point(451, 106);
+            this.label3.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(82, 30);
+            this.label3.Size = new System.Drawing.Size(36, 13);
             this.label3.TabIndex = 12;
             this.label3.Text = "Timer";
             // 
             // textBox2timer
             // 
-            this.textBox2timer.Location = new System.Drawing.Point(1328, 262);
-            this.textBox2timer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox2timer.Location = new System.Drawing.Point(498, 105);
+            this.textBox2timer.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox2timer.Multiline = true;
             this.textBox2timer.Name = "textBox2timer";
-            this.textBox2timer.Size = new System.Drawing.Size(207, 44);
+            this.textBox2timer.Size = new System.Drawing.Size(80, 20);
             this.textBox2timer.TabIndex = 13;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(83, 262);
+            this.label2.Location = new System.Drawing.Point(31, 105);
+            this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(133, 30);
+            this.label2.Size = new System.Drawing.Size(59, 13);
             this.label2.TabIndex = 14;
             this.label2.Text = "電腦狀態";
             // 
             // textBox1_cmstatus
             // 
-            this.textBox1_cmstatus.Location = new System.Drawing.Point(88, 350);
-            this.textBox1_cmstatus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox1_cmstatus.Location = new System.Drawing.Point(33, 140);
+            this.textBox1_cmstatus.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox1_cmstatus.Multiline = true;
             this.textBox1_cmstatus.Name = "textBox1_cmstatus";
-            this.textBox1_cmstatus.Size = new System.Drawing.Size(399, 456);
+            this.textBox1_cmstatus.Size = new System.Drawing.Size(152, 185);
             this.textBox1_cmstatus.TabIndex = 15;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(635, 262);
+            this.label4.Location = new System.Drawing.Point(238, 105);
+            this.label4.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(87, 30);
+            this.label4.Size = new System.Drawing.Size(39, 13);
             this.label4.TabIndex = 16;
             this.label4.Text = "x座標";
             // 
             // textBox1xsition
             // 
-            this.textBox1xsition.Location = new System.Drawing.Point(640, 350);
-            this.textBox1xsition.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox1xsition.Location = new System.Drawing.Point(240, 140);
+            this.textBox1xsition.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox1xsition.Multiline = true;
             this.textBox1xsition.Name = "textBox1xsition";
-            this.textBox1xsition.Size = new System.Drawing.Size(399, 456);
+            this.textBox1xsition.Size = new System.Drawing.Size(152, 185);
             this.textBox1xsition.TabIndex = 17;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(1113, 438);
+            this.label7.Location = new System.Drawing.Point(417, 175);
+            this.label7.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(197, 30);
+            this.label7.Size = new System.Drawing.Size(84, 13);
             this.label7.TabIndex = 18;
             this.label7.Text = "睡眠前xRepeat";
             // 
             // textBox1sleepbefore
             // 
-            this.textBox1sleepbefore.Location = new System.Drawing.Point(1328, 435);
-            this.textBox1sleepbefore.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox1sleepbefore.Location = new System.Drawing.Point(498, 174);
+            this.textBox1sleepbefore.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox1sleepbefore.Multiline = true;
             this.textBox1sleepbefore.Name = "textBox1sleepbefore";
-            this.textBox1sleepbefore.Size = new System.Drawing.Size(207, 44);
+            this.textBox1sleepbefore.Size = new System.Drawing.Size(80, 20);
             this.textBox1sleepbefore.TabIndex = 19;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(1164, 536);
+            this.label8.Location = new System.Drawing.Point(436, 214);
+            this.label8.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(133, 30);
+            this.label8.Size = new System.Drawing.Size(59, 13);
             this.label8.TabIndex = 20;
             this.label8.Text = "睡眠多久";
             // 
             // textBox1sleeptime
             // 
-            this.textBox1sleeptime.Location = new System.Drawing.Point(1328, 536);
-            this.textBox1sleeptime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox1sleeptime.Location = new System.Drawing.Point(498, 214);
+            this.textBox1sleeptime.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox1sleeptime.Multiline = true;
             this.textBox1sleeptime.Name = "textBox1sleeptime";
-            this.textBox1sleeptime.Size = new System.Drawing.Size(207, 44);
+            this.textBox1sleeptime.Size = new System.Drawing.Size(80, 20);
             this.textBox1sleeptime.TabIndex = 21;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(1137, 634);
+            this.label9.Location = new System.Drawing.Point(426, 254);
+            this.label9.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(173, 30);
+            this.label9.Size = new System.Drawing.Size(74, 13);
             this.label9.TabIndex = 22;
             this.label9.Text = "睡眠+xrepeat";
             // 
             // textBox2totalsleepandxrepeat
             // 
-            this.textBox2totalsleepandxrepeat.Location = new System.Drawing.Point(1328, 631);
-            this.textBox2totalsleepandxrepeat.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox2totalsleepandxrepeat.Location = new System.Drawing.Point(498, 252);
+            this.textBox2totalsleepandxrepeat.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox2totalsleepandxrepeat.Multiline = true;
             this.textBox2totalsleepandxrepeat.Name = "textBox2totalsleepandxrepeat";
-            this.textBox2totalsleepandxrepeat.Size = new System.Drawing.Size(207, 44);
+            this.textBox2totalsleepandxrepeat.Size = new System.Drawing.Size(80, 20);
             this.textBox2totalsleepandxrepeat.TabIndex = 23;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(1312, 762);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox1.Location = new System.Drawing.Point(492, 305);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(207, 44);
+            this.textBox1.Size = new System.Drawing.Size(80, 20);
             this.textBox1.TabIndex = 24;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(1312, 859);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox2.Location = new System.Drawing.Point(492, 344);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(207, 44);
+            this.textBox2.Size = new System.Drawing.Size(80, 20);
             this.textBox2.TabIndex = 25;
             // 
             // textBox3path
             // 
-            this.textBox3path.Location = new System.Drawing.Point(329, 850);
-            this.textBox3path.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox3path.Location = new System.Drawing.Point(123, 340);
+            this.textBox3path.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox3path.Multiline = true;
             this.textBox3path.Name = "textBox3path";
-            this.textBox3path.Size = new System.Drawing.Size(944, 81);
+            this.textBox3path.Size = new System.Drawing.Size(356, 35);
             this.textBox3path.TabIndex = 26;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(131, 862);
+            this.label10.Location = new System.Drawing.Point(49, 345);
+            this.label10.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(133, 30);
+            this.label10.Size = new System.Drawing.Size(59, 13);
             this.label10.TabIndex = 27;
             this.label10.Text = "檔案路徑";
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(752, 94);
+            this.textBox3.Location = new System.Drawing.Point(282, 38);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(250, 74);
+            this.textBox3.Size = new System.Drawing.Size(96, 32);
             this.textBox3.TabIndex = 28;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 30F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SteelBlue;
-            this.ClientSize = new System.Drawing.Size(1683, 1060);
+            this.ClientSize = new System.Drawing.Size(706, 461);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.textBox3path);
@@ -372,7 +379,7 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);

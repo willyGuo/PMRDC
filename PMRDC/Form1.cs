@@ -39,7 +39,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230220a";
+        string Version = "v20230223";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -538,12 +538,12 @@ namespace PMRDC
                 int tsmin = (int)ts.TotalMinutes;
                 totolsleeptime += tsmin;
                 int totsuspendtimeandxrepeat = tsmin + suspendxrepeat;
-                LogapiAsync("SleepOver60mincheck", totsuspendtimeandxrepeat);
+                Sigma_exist = Simga_existFuc();
                 try
                 {
                     //textBox1sleeptime.Text = tsmin.ToString();
                     //textBox2totalsleepandxrepeat.Text = totsuspendtimeandxrepeat.ToString();
-                    if (totsuspendtimeandxrepeat > 60)
+                    if (totsuspendtimeandxrepeat > 60 && Sigma_exist==true)
                     {
                         logwrite("SleepOver60min");
                         LogapiAsync("SleepOver60min", totsuspendtimeandxrepeat);
@@ -589,6 +589,7 @@ namespace PMRDC
             this.ShowInTaskbar = false;
             this.Hide();
             updatemin = nametitle();
+            //textBox2timer.Text = aa.ToString();
         }
 
 
