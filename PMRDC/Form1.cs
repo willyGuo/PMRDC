@@ -590,6 +590,7 @@ namespace PMRDC
             this.Hide();
             updatemin = nametitle();
             //textBox2timer.Text = aa.ToString();
+            //v20230223
         }
 
 
