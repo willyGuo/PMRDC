@@ -39,7 +39,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230223";
+        string Version = "v20230302";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -113,7 +113,26 @@ namespace PMRDC
             }
 
         }
+        private string GetActiveWindowTitle()
+        {
+            const int nChars = 256;
+            System.Text.StringBuilder Buff = new System.Text.StringBuilder(nChars);
+            IntPtr handle = GetForegroundWindow();
 
+            if (GetWindowText(handle, Buff, nChars) > 0)
+            {
+                if (Buff.ToString().Contains("6SigmaET"))
+                {
+                    return "topmost6sigma";
+                }
+                else
+                { 
+                    return "topmostnot6sigma";
+                }
+                
+            }
+            return "topmostnot6sigma";
+        }
         public  void bringToFront(string title)
         {
             
@@ -405,9 +424,9 @@ namespace PMRDC
         private void timer1_Tick(object sender, EventArgs e)
         {
             //textBox1xsition.Text += (string.Format("{0}", System.Windows.Forms.Cursor.Position.X) + "\r\n");
-            //textBox2timer.Text = aa.ToString();
-            //++aa;
-            //textBox1reapeat.Text = xrepeat.ToString();
+            textBox2timer.Text = aa.ToString();
+            ++aa;
+            textBox1reapeat.Text = xrepeat.ToString();
             DateTime nowtime = DateTime.Now;
             if (nowtime.ToString("HH:mm") == ("13:0"+ updatemin) || nowtime.ToString("HH:mm") == ("17:0" + updatemin))
             {
@@ -441,7 +460,9 @@ namespace PMRDC
                 {
                     Pastx = Nowx;
                     Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
-                    if (Pastx == Nowx || Pastx == 0)
+                    string topmostcheck = GetActiveWindowTitle();
+                    //如果滑鼠座標跟上一次依樣，或是滑鼠座標等於0，或是6Simga不在最上層
+                    if ((Pastx == Nowx) || (Pastx == 0) || (topmostcheck == "topmostnot6sigma"))
                     {
                         ++xrepeat;
                     }
