@@ -39,7 +39,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230302";
+        string Version = "v20230330";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -341,6 +341,7 @@ namespace PMRDC
                     TimeSpan ts = timeminend.Subtract(timeminstr);
                     int tsmin = (int)ts.TotalMinutes;
                     logwrite("userclose6Sigma");
+                    xrepeat = 0;
                     LogapiAsync("userclose6Sigma", tsmin);
                     //ClosePress("6SigmaET");//關閉外部檔案
                     sigmaFirstOpen = true;
@@ -471,16 +472,17 @@ namespace PMRDC
                         xrepeat = 0;
                     }
                 }
-                if (xrepeat == 45)
+                if (xrepeat == 135)
                 {
                     logwrite("idle45");
                     LogapiAsync("idle45");
-                    string text45 = "電腦已閒置45分鐘，請立即存檔。系統若閒置60分鐘，將強制關閉6Sigma。";
+                    string text45 = "電腦已閒置45分鐘，請立即存檔。系統若閒置60分鐘，將強制關閉6Sigma。\r\n" + 
+                        "需持續動作6Sigma一分鐘以上，解除閒置狀態" + nowtime.ToString("HH:mm:ss");
                     MessageBox.Show(new Form { TopMost = true }, text45);
                     return;
                 }
                 //如果60分鐘都沒動，就紀錄後關閉平台
-                if (xrepeat == 60)
+                if (xrepeat == 180)
                 {
                         
                     timeminend = DateTime.Now;
@@ -492,7 +494,9 @@ namespace PMRDC
                     //ClosePress("6SigmaET");//關閉外部檔案
                     string text60 = "因電腦閒置60分鐘，故將6Sigma關閉。";
                     sigmaFirstOpen = true;
+                    sigmacheck = false;
                     totolsleeptime = 0;
+                    xrepeat = 0;
                     MessageBox.Show(new Form { TopMost = true }, text60);
                         
                     return;
@@ -510,6 +514,7 @@ namespace PMRDC
                 LogapiAsync("userclose6Sigma", tsmin);
                 sigmaFirstOpen = true;
                 totolsleeptime = 0;
+                xrepeat = 0;
             }
        
 
@@ -525,7 +530,7 @@ namespace PMRDC
             {
                 suspendtimestr = DateTime.Now;
                 suspendxrepeat = xrepeat;
-                if (xrepeat > 30 && Sigma_exist)
+                if (xrepeat > 90 && Sigma_exist)
                 {
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
@@ -549,6 +554,7 @@ namespace PMRDC
                     int tsmin = (int)ts.TotalMinutes - totolsleeptime;
                     LogapiAsync("userclose6Sigma", tsmin);
                     sigmaFirstOpen = true;
+                    xrepeat = 0;
                 }
                 //textBox1sleepbefore.Text = suspendxrepeat.ToString();
             }
@@ -605,13 +611,13 @@ namespace PMRDC
             //紀錄開啟平台LOG
             LogapiAsync("OpenPlatform");
             timerStart = true;
-            timer1.Interval = 60000;
+            timer1.Interval = 20000;
             timer1.Enabled = true;
             this.ShowInTaskbar = false;
             this.Hide();
             updatemin = nametitle();
             //textBox2timer.Text = aa.ToString();
-            //v20230223
+            //v20230308
         }
 
 
@@ -628,8 +634,9 @@ namespace PMRDC
                 TimeSpan ts = timeminend.Subtract(timeminstr);
                 int tsmin = (int)ts.TotalMinutes;
                 LogapiAsync("userclose6Sigma", tsmin);
+                xrepeat = 0;
 
-                
+
             }
             logwrite("ClosePlatform");
             timeminend = DateTime.Now;
@@ -655,6 +662,7 @@ namespace PMRDC
                 TimeSpan ts = timeminend.Subtract(timeminstr);
                 int tsmin = (int)ts.TotalMinutes;
                 logwrite("userclose6Sigma");
+                xrepeat = 0;
                 LogapiAsync("userclose6Sigma", tsmin);
                 //ClosePress("6SigmaET");//關閉外部檔案
                 sigmaFirstOpen = true;
