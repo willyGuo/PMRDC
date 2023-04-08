@@ -57,6 +57,8 @@ namespace PMRDC
         int aa =0;
         string updatemin;
         string processname;
+        DateTime worktime_str = DateTime.Parse("09:00:00");
+        DateTime worktime_end = DateTime.Parse("18:00:00");
         //172.18.212.76/
         //172.18.212.76
         bool sigmaFirstOpen = true;
@@ -465,7 +467,16 @@ namespace PMRDC
                     //如果滑鼠座標跟上一次依樣，或是滑鼠座標等於0，或是6Simga不在最上層
                     if ((Pastx == Nowx) || (Pastx == 0) || (topmostcheck == "topmostnot6sigma"))
                     {
-                        ++xrepeat;
+                        DateTime worktime_check = DateTime.Now;
+                        if ((worktime_check >= worktime_str) && (worktime_check <= worktime_end))
+                        {
+                            ++xrepeat;
+                        }
+                        else
+                        {
+                            xrepeat = 0;
+                        }
+    
                     }
                     else
                     {
