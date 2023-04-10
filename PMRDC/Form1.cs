@@ -39,7 +39,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230330";
+        string Version = "v20230410";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -468,7 +468,8 @@ namespace PMRDC
                     if ((Pastx == Nowx) || (Pastx == 0) || (topmostcheck == "topmostnot6sigma"))
                     {
                         DateTime worktime_check = DateTime.Now;
-                        if ((worktime_check >= worktime_str) && (worktime_check <= worktime_end))
+                        //如果目前時間在工作時間內且不是星期六和星期日，xrepeat就必須跑
+                        if ((worktime_check >= worktime_str) && (worktime_check <= worktime_end) && (DayOfWeek.Saturday != worktime_check.DayOfWeek) && (DayOfWeek.Sunday != worktime_check.DayOfWeek))
                         {
                             ++xrepeat;
                         }
