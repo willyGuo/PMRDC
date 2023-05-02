@@ -39,6 +39,7 @@
             this.reloadmeun = new System.Windows.Forms.ToolStripMenuItem();
             this.closemeun = new System.Windows.Forms.ToolStripMenuItem();
             this.helpmeun = new System.Windows.Forms.ToolStripMenuItem();
+            this.devModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label6 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label2xrepeat = new System.Windows.Forms.Label();
@@ -62,6 +63,9 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -97,7 +101,7 @@
             this.button3.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.button3.ForeColor = System.Drawing.Color.SteelBlue;
             this.button3.Location = new System.Drawing.Point(752, 960);
-            this.button3.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.button3.Margin = new System.Windows.Forms.Padding(8);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(229, 75);
             this.button3.TabIndex = 6;
@@ -112,6 +116,7 @@
             this.notifyIcon1.Text = "PMRDC";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.HelpToolStripMenuItem_Click);
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
             // contextMenuStrip1
             // 
@@ -119,9 +124,10 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.reloadmeun,
             this.closemeun,
-            this.helpmeun});
+            this.helpmeun,
+            this.devModeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(223, 146);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(265, 194);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // reloadmeun
@@ -137,7 +143,7 @@
             // 
             this.closemeun.Image = global::PMRDC.Properties.Resources.update;
             this.closemeun.Name = "closemeun";
-            this.closemeun.Size = new System.Drawing.Size(222, 48);
+            this.closemeun.Size = new System.Drawing.Size(264, 48);
             this.closemeun.Text = "Update";
             this.closemeun.Click += new System.EventHandler(this.UpdateToolStripMenuItem_Click);
             // 
@@ -145,10 +151,17 @@
             // 
             this.helpmeun.Image = ((System.Drawing.Image)(resources.GetObject("helpmeun.Image")));
             this.helpmeun.Name = "helpmeun";
-            this.helpmeun.Size = new System.Drawing.Size(222, 48);
+            this.helpmeun.Size = new System.Drawing.Size(264, 48);
             this.helpmeun.Text = "Help";
             this.helpmeun.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             this.helpmeun.Paint += new System.Windows.Forms.PaintEventHandler(this.helpmeun_Paint);
+            // 
+            // devModeToolStripMenuItem
+            // 
+            this.devModeToolStripMenuItem.Name = "devModeToolStripMenuItem";
+            this.devModeToolStripMenuItem.Size = new System.Drawing.Size(264, 48);
+            this.devModeToolStripMenuItem.Text = "Dev mode";
+            this.devModeToolStripMenuItem.Click += new System.EventHandler(this.devModeToolStripMenuItem_Click);
             // 
             // label6
             // 
@@ -208,6 +221,7 @@
             this.textBox2timer.Name = "textBox2timer";
             this.textBox2timer.Size = new System.Drawing.Size(207, 44);
             this.textBox2timer.TabIndex = 13;
+            this.textBox2timer.TextChanged += new System.EventHandler(this.textBox2timer_TextChanged);
             // 
             // label2
             // 
@@ -301,7 +315,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(1312, 762);
+            this.textBox1.Location = new System.Drawing.Point(1328, 720);
             this.textBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
@@ -363,6 +377,33 @@
             this.label11.TabIndex = 30;
             this.label11.Text = "目前視窗 :";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(1104, 723);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(206, 30);
+            this.label12.TabIndex = 22;
+            this.label12.Text = "目前Sigma狀態";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(1328, 794);
+            this.textBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox5.Multiline = true;
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(207, 44);
+            this.textBox5.TabIndex = 24;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(1103, 794);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(223, 30);
+            this.label13.TabIndex = 22;
+            this.label13.Text = "是否第一次開啟";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 30F);
@@ -375,8 +416,11 @@
             this.Controls.Add(this.label10);
             this.Controls.Add(this.textBox3path);
             this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.textBox2totalsleepandxrepeat);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.textBox1sleeptime);
             this.Controls.Add(this.label8);
@@ -401,6 +445,7 @@
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load_1);
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -441,5 +486,9 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ToolStripMenuItem devModeToolStripMenuItem;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.Label label13;
     }
 }

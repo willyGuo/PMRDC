@@ -39,7 +39,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230410";
+        string Version = "v20230503a";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -266,7 +266,7 @@ namespace PMRDC
 
                 //WriteLine為換行 
                 sw.Write(nowTime + " " + Version + " : ");
-                sw.WriteLine(logmsg);
+                sw.WriteLine(logmsg +"  xRepeat : " + xrepeat );
                 sw.Dispose();
 
             }
@@ -315,7 +315,7 @@ namespace PMRDC
             string[] aryUserInfo = strUserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             //建立新連線後，將資料用post方式回傳
             HttpClient client = new HttpClient();
-            string reponse = await client.GetStringAsync("http://172.18.212.76/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime + "/" + oaname);
+            string reponse = await client.GetStringAsync("http://172.18.212.76/log/6Sigma/" +Version +"/" + aryUserInfo[1]  + "/" + action + "/" + deltatime + "/" + oaname + "/" + xrepeat);
             //textBox1.Text = reponse;
 
             return true;
@@ -442,6 +442,8 @@ namespace PMRDC
             //lbltimer.Text = string.Format("時間：" + DateTime.Now.ToString("HH:mm:ss") + "，X：{0}，Y：{1}"
             //, System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y);
             Sigma_exist = Simga_existFuc();
+            textBox1.Text = Sigma_exist.ToString();
+            textBox5.Text = sigmaFirstOpen.ToString();
             //如果Sigma有打開，就在執行
             if (Sigma_exist)
             {
@@ -484,7 +486,7 @@ namespace PMRDC
                         xrepeat = 0;
                     }
                 }
-                if (xrepeat == 135)
+                if ((xrepeat % 135 == 0) && (xrepeat !=0))
                 {
                     logwrite("idle45");
                     LogapiAsync("idle45");
@@ -494,7 +496,7 @@ namespace PMRDC
                     return;
                 }
                 //如果60分鐘都沒動，就紀錄後關閉平台
-                if (xrepeat == 180)
+                if ((xrepeat % 180 == 0) && (xrepeat != 0))
                 {
                         
                     timeminend = DateTime.Now;
@@ -623,7 +625,7 @@ namespace PMRDC
             //紀錄開啟平台LOG
             LogapiAsync("OpenPlatform");
             timerStart = true;
-            timer1.Interval = 20000;
+            timer1.Interval = 200;
             timer1.Enabled = true;
             this.ShowInTaskbar = false;
             this.Hide();
@@ -710,7 +712,8 @@ namespace PMRDC
           "若有急需使用軟體，但無License情況請聯絡RDPM(Marcus Kuo #33930)\r\n* " +
           "程序問題可以先在右下角圖示右鍵Reload排除\r\n* " +
           "平台使用問題請聯絡Willy Guo(#32725)\r\n" +
-          "版本號 : " + Version;
+          "版本號 : " + Version + "\r\n" +
+          "xrepeate : " + xrepeat;
 
             MessageBox.Show(new Form { TopMost = true }, texthelp);
         }
@@ -740,6 +743,30 @@ namespace PMRDC
             MessageBox.Show(new Form { TopMost = true }, text60);
         }
 
+        private void textBox2timer_TextChanged(object sender, EventArgs e)
+        {
 
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void devModeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 f = new Form2(this);//產生Form2的物件，才可以使用它所提供的Method
+
+            this.Visible = false;//將Form1隱藏。由於在Form1的程式碼內使用this，所以this為Form1的物件本身
+            f.Visible = true;//顯示第二個視窗
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                this.Hide();
+            }
+        }
     }
 }
