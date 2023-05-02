@@ -106,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cryptocurrency_dash_icon_230234.ico" />
+    <Content Include="Resources\work-tools.png" />
     <None Include="Resources\update.png" />
     <None Include="Resources\help.png" />
     <None Include="Resources\reload.png" />

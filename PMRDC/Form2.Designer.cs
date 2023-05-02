@@ -36,37 +36,43 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(59, 61);
+            this.label1.Location = new System.Drawing.Point(22, 24);
+            this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(191, 30);
+            this.label1.Size = new System.Drawing.Size(75, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "PASSWORD : ";
             // 
             // pwdtextBox
             // 
-            this.pwdtextBox.Location = new System.Drawing.Point(280, 58);
+            this.pwdtextBox.Location = new System.Drawing.Point(105, 23);
+            this.pwdtextBox.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.pwdtextBox.Name = "pwdtextBox";
-            this.pwdtextBox.Size = new System.Drawing.Size(279, 43);
+            this.pwdtextBox.Size = new System.Drawing.Size(107, 22);
             this.pwdtextBox.TabIndex = 1;
+            this.pwdtextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.pwdtextBox_KeyDown);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(612, 51);
+            this.button1.Location = new System.Drawing.Point(230, 20);
+            this.button1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(145, 51);
+            this.button1.Size = new System.Drawing.Size(54, 20);
             this.button1.TabIndex = 2;
             this.button1.Text = "確認";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.button1_KeyDown);
             // 
             // Form2
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 30F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(903, 163);
+            this.ClientSize = new System.Drawing.Size(339, 65);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pwdtextBox);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.Name = "Form2";
             this.Text = "Form2";
             this.ResumeLayout(false);
