@@ -39,7 +39,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230504";
+        string Version = "v20230505";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -57,8 +57,8 @@ namespace PMRDC
         int aa =0;
         string updatemin;
         string processname;
-        DateTime worktime_str = DateTime.Parse("09:00:00");
-        DateTime worktime_end = DateTime.Parse("18:00:00");
+        TimeSpan worktime_str = DateTime.Parse("09:00:00").TimeOfDay;
+        TimeSpan worktime_end = DateTime.Parse("18:00:00").TimeOfDay;
         //172.18.212.76/
         //172.18.212.76
         bool sigmaFirstOpen = true;
@@ -430,17 +430,16 @@ namespace PMRDC
             textBox2timer.Text = aa.ToString();
             ++aa;
             textBox1reapeat.Text = xrepeat.ToString();
+            workstr_text.Text = worktime_str.ToString();
+            workend_text.Text = worktime_end.ToString();
+            day6_text.Text = DayOfWeek.Saturday.ToString();
+            day7_text.Text = DayOfWeek.Sunday.ToString();
             DateTime nowtime = DateTime.Now;
             if (nowtime.ToString("HH:mm") == ("13:0"+ updatemin) || nowtime.ToString("HH:mm") == ("17:0" + updatemin))
             {
                 Task<bool> task = VersioncheckAsync();
             }
 
-            //計數器
-            //如果第一次紀錄就先記錄第一次滑鼠x座標
-
-            //lbltimer.Text = string.Format("時間：" + DateTime.Now.ToString("HH:mm:ss") + "，X：{0}，Y：{1}"
-            //, System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y);
             Sigma_exist = Simga_existFuc();
             textBox1.Text = Sigma_exist.ToString();
             textBox5.Text = sigmaFirstOpen.ToString();
@@ -466,17 +465,22 @@ namespace PMRDC
                     Pastx = Nowx;
                     Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
                     string topmostcheck = GetActiveWindowTitle();
+                    topmosttext.Text= topmostcheck;
                     //如果滑鼠座標跟上一次依樣，或是滑鼠座標等於0，或是6Simga不在最上層
                     if ((Pastx == Nowx) || (Pastx == 0) || (topmostcheck == "topmostnot6sigma"))
                     {
-                        DateTime worktime_check = DateTime.Now;
+                        dayofweektext.Text = nowtime.DayOfWeek.ToString();
+                        TimeSpan dspNow = nowtime.TimeOfDay;
+                        now_text.Text = dspNow.ToString();
                         //如果目前時間在工作時間內且不是星期六和星期日，xrepeat就必須跑
-                        if ((worktime_check >= worktime_str) && (worktime_check <= worktime_end) && (DayOfWeek.Saturday != worktime_check.DayOfWeek) && (DayOfWeek.Sunday != worktime_check.DayOfWeek))
+                        if ((dspNow >= worktime_str) && (dspNow <= worktime_end) && (DayOfWeek.Saturday != nowtime.DayOfWeek) && (DayOfWeek.Sunday != nowtime.DayOfWeek))
                         {
                             ++xrepeat;
                         }
                         else
                         {
+                            step1text.Text = "我在這裡變成0";
+                            step2text.Text = "No";
                             xrepeat = 0;
                         }
     
@@ -484,6 +488,9 @@ namespace PMRDC
                     else
                     {
                         xrepeat = 0;
+                        step1text.Text = "No";
+                        step2text.Text = "我在這裡變成0";
+                        
                     }
                 }
                 if ((xrepeat % 135 == 0) && (xrepeat !=0))
@@ -767,6 +774,16 @@ namespace PMRDC
             {
                 this.Hide();
             }
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
