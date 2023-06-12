@@ -39,7 +39,7 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230510";
+        string Version = "v20230612";
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -107,7 +107,7 @@ namespace PMRDC
             {
                 if (catchexlog != ex.Message)
                 {
-                    logwrite(ex.ToString());
+                    //logwrite(ex.ToString());
                     LogapiAsync(ex.Message + ":" + processname, 0);
                     catchexlog = ex.Message;
                 }
@@ -189,7 +189,7 @@ namespace PMRDC
             }
             catch (Exception)
             {
-                logwrite("建立捷徑錯誤");
+                //logwrite("建立捷徑錯誤");
                 LogapiAsync("建立捷徑錯誤");
                 return false;
             }
@@ -342,7 +342,7 @@ namespace PMRDC
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
                     int tsmin = (int)ts.TotalMinutes;
-                    logwrite("userclose6Sigma");
+                    //logwrite("userclose6Sigma");
                     xrepeat = 0;
                     LogapiAsync("userclose6Sigma", tsmin);
                     //ClosePress("6SigmaET");//關閉外部檔案
@@ -370,7 +370,7 @@ namespace PMRDC
                 myWebClient.DownloadFile(myStringWebResource, targetsave);
 
                 ZipFile.ExtractToDirectory(Application.StartupPath + "/" + descJsonVer.Downloaduri, zippath);
-                logwrite("Update from_" + descJsonVer.user_version);
+                //logwrite("Update from_" + descJsonVer.user_version);
                 LogapiAsync("Update from_" + descJsonVer.user_version);
                 Process PMRDCexe = new Process();
                 // FileName 是要執行的檔案
@@ -453,7 +453,7 @@ namespace PMRDC
                 {
                     timeminstr = DateTime.Now;
                     Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
-                    logwrite("Open6Sigma");
+                    //logwrite("Open6Sigma");
                     LogapiAsync("Open6Sigma");
                     ++timerCount;
                     sigmaFirstOpen = false;
@@ -495,7 +495,7 @@ namespace PMRDC
                 }
                 if ((xrepeat % 135 == 0) && (xrepeat !=0))
                 {
-                    logwrite("idle45");
+                    //logwrite("idle45");
                     LogapiAsync("idle45");
                     string text45 = "電腦已閒置45分鐘，請立即存檔。系統若閒置60分鐘，將強制關閉6Sigma。\r\n" + 
                         "需持續動作6Sigma一分鐘以上，解除閒置狀態" + nowtime.ToString("HH:mm:ss");
@@ -509,7 +509,7 @@ namespace PMRDC
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
                     int tsmin = (int)ts.TotalMinutes;
-                    logwrite("idle60");
+                    //logwrite("idle60");
                     Task<bool> task = LogapiAsync("idle60", tsmin);
                     idlecloseSW();
                     //ClosePress("6SigmaET");//關閉外部檔案
@@ -528,7 +528,7 @@ namespace PMRDC
             if (!Sigma_exist && sigmaFirstOpen == false)
             {
                 sigmacheck= false;
-                logwrite("userclose6Sigma");
+                //logwrite("userclose6Sigma");
                 timeminend = DateTime.Now;
                 TimeSpan ts = timeminend.Subtract(timeminstr);
                 int tsmin = (int)ts.TotalMinutes - totolsleeptime;
@@ -556,7 +556,7 @@ namespace PMRDC
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
                     int tsmin = (int)ts.TotalMinutes;
-                    logwrite("sleepclose");
+                    //logwrite("sleepclose");
                     Task<bool> task = LogapiAsync("sleepclose", tsmin);
                     idlecloseSW();
                     //ClosePress("6SigmaET");//關閉外部檔案
@@ -569,7 +569,7 @@ namespace PMRDC
                 {
                     sigmacheck = false;
                     totolsleeptime = 0;
-                    logwrite("userclose6Sigma");
+                    //logwrite("userclose6Sigma");
                     timeminend = DateTime.Now;
                     TimeSpan ts = timeminend.Subtract(timeminstr);
                     int tsmin = (int)ts.TotalMinutes - totolsleeptime;
@@ -593,13 +593,13 @@ namespace PMRDC
                     //textBox2totalsleepandxrepeat.Text = totsuspendtimeandxrepeat.ToString();
                     if (totsuspendtimeandxrepeat > 60 && Sigma_exist==true)
                     {
-                        logwrite("SleepOver60min");
+                        //logwrite("SleepOver60min");
                         LogapiAsync("SleepOver60min", totsuspendtimeandxrepeat);
                     }
                 }
                 catch (Exception ex)
                 {
-                    logwrite(ex.ToString());
+                    //logwrite(ex.ToString());
                     LogapiAsync(ex.Message + ": 紀錄睡眠錯誤", 0);
                 }
             }
@@ -616,7 +616,7 @@ namespace PMRDC
             Filecheck();
             CreateDesktopShortcut("PMRDC.exe");
             //紀錄LOG
-            logwrite("Open Platform");
+            //logwrite("Open Platform");
             Task<bool> task = VersioncheckAsync();
 
             //判斷平台是否有重複開啟，有的話把先前的全部關掉，留一個並重新啟動
@@ -630,7 +630,7 @@ namespace PMRDC
             //判斷版本
             //Task<bool> task = VersioncheckAsync();
             //紀錄開啟平台LOG
-            LogapiAsync("OpenPlatform");
+            //LogapiAsync("OpenPlatform");
             timerStart = true;
             timer1.Interval = 20000;
             timer1.Enabled = true;
@@ -646,11 +646,11 @@ namespace PMRDC
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) //當平台要被關閉前，紀錄被關閉
         {
             Sigma_exist = Simga_existFuc();
-            logwrite("測試是否關閉且記錄到log");
+            //logwrite("測試是否關閉且記錄到log");
             //如果平台關閉之前，sigma還是開著;或是sigma被打開，但沒紀錄到關掉
             if ((Sigma_exist == true || sigmacheck == true) && timeminstr.ToString("yyyy") != "0001") 
             { 
-                logwrite("userclose6Sigma");
+                //logwrite("userclose6Sigma");
                 timeminend = DateTime.Now;
                 TimeSpan ts = timeminend.Subtract(timeminstr);
                 int tsmin = (int)ts.TotalMinutes;
@@ -659,11 +659,11 @@ namespace PMRDC
 
 
             }
-            logwrite("ClosePlatform");
+            //logwrite("ClosePlatform");
             timeminend = DateTime.Now;
             TimeSpan ts_p = timeminend.Subtract(timeminPlatformstr);
             int tsmin_p = (int)ts_p.TotalMinutes;
-            LogapiAsync("ClosePlatform", tsmin_p);
+            //LogapiAsync("ClosePlatform", tsmin_p);
             
         }
 
@@ -671,18 +671,18 @@ namespace PMRDC
         private void ReloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string textrrload = "重載成功!";
-            logwrite("ClosePlatform");
+            //logwrite("ClosePlatform");
             timeminend = DateTime.Now;
             TimeSpan ts_p = timeminend.Subtract(timeminPlatformstr);
             int tsmin_p = (int)ts_p.TotalMinutes;
-            LogapiAsync("ClosePlatform", tsmin_p);
+            //LogapiAsync("ClosePlatform", tsmin_p);
             Sigma_exist = Simga_existFuc();
             if (Sigma_exist && sigmacheck)
             {
                 timeminend = DateTime.Now;
                 TimeSpan ts = timeminend.Subtract(timeminstr);
                 int tsmin = (int)ts.TotalMinutes;
-                logwrite("userclose6Sigma");
+                //logwrite("userclose6Sigma");
                 xrepeat = 0;
                 LogapiAsync("userclose6Sigma", tsmin);
                 //ClosePress("6SigmaET");//關閉外部檔案
@@ -741,7 +741,7 @@ namespace PMRDC
             timeminend = DateTime.Now;
             TimeSpan ts = timeminend.Subtract(timeminstr);
             int tsmin = (int)ts.TotalMinutes;
-            logwrite("idle60");
+            //logwrite("idle60");
             Task<bool> task = LogapiAsync("idle60", tsmin);
             idlecloseSW();
             //ClosePress("6SigmaET");//關閉外部檔案
