@@ -26,7 +26,6 @@ namespace PMRDC
         //設定LOG要存放的位置
         String logPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup).Replace("Startup", "PMRDC"); //Log目錄
         //判斷是否為開計時器的開始而已
-        int timerCount = 0;
         //計時器開啟，預設先關閉
         bool timerStart = false;
         //紀錄上一次x座標
@@ -215,7 +214,7 @@ namespace PMRDC
 
             }
         }
-        public void delpast6sigma2()
+        public void delpastPMRDC()
         {
             Process currentProcess = Process.GetCurrentProcess();
             Process[] processes = Process.GetProcessesByName("PMRDC");
@@ -473,7 +472,6 @@ namespace PMRDC
                     Nowx = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
                     //logwrite("Open6Sigma");
                     LogapiAsync("Open6Sigma");
-                    ++timerCount;
                     sigmaFirstOpen = false;
                     return;
                 }
@@ -629,10 +627,11 @@ namespace PMRDC
             //在桌面建立一個捷徑
             this.notifyIcon1.Text = Version;
             Thread.Sleep(5000);
-            delpast6sigma2();
+            delpastPMRDC();
             //判斷紀錄LOG的資料夾和檔案是否存在
             Filecheck();
             CreateDesktopShortcut("PMRDC.exe");
+            LogapiAsync("OpenPlatform");
             //紀錄LOG
             //logwrite("Open Platform");
             Task<bool> task = VersioncheckAsync();
@@ -678,9 +677,9 @@ namespace PMRDC
 
             }
             //logwrite("ClosePlatform");
-            timeminend = DateTime.Now;
-            TimeSpan ts_p = timeminend.Subtract(timeminPlatformstr);
-            int tsmin_p = (int)ts_p.TotalMinutes;
+            //timeminend = DateTime.Now;
+            //TimeSpan ts_p = timeminend.Subtract(timeminPlatformstr);
+            //int tsmin_p = (int)ts_p.TotalMinutes;
             //LogapiAsync("ClosePlatform", tsmin_p);
             
         }
