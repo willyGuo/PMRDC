@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Security.Principal;
@@ -39,7 +40,8 @@ namespace PMRDC
         //取得目前登入的帳號
         string strUserName = WindowsIdentity.GetCurrent().Name;
         //此系統版本
-        string Version = "v20230612";
+        string Version = "v20230729";
+        int idlestop = -1;
         //紀錄6sigma開啟時間
         DateTime timeminstr;
         //紀錄6sigma關閉時間
@@ -53,6 +55,7 @@ namespace PMRDC
         //是否為閒置關閉
         bool sigmacheck = false;
         string oaname = Environment.MachineName;
+        string idlestoptime = "無";
         int suspendxrepeat;
         int aa =0;
         string updatemin;
@@ -62,6 +65,7 @@ namespace PMRDC
         //172.18.212.76/
         //172.18.212.76
         bool sigmaFirstOpen = true;
+        int idlestopcount = 0;
         DateTime suspendtimestr;
         DateTime suspendtimeend;
         int totolsleeptime = 0;
@@ -439,6 +443,20 @@ namespace PMRDC
             {
                 Task<bool> task = VersioncheckAsync();
             }
+            if (idlestop > 0)
+            {
+                ++idlestopcount;
+                if(idlestopcount != idlestop)
+                {
+                    return;
+                }
+                if(idlestopcount > idlestop)
+                {
+                    idlestopcount = 0;
+                    idlestop = -1;
+                }
+                
+            }
 
             Sigma_exist = Simga_existFuc();
             textBox1.Text = Sigma_exist.ToString();
@@ -715,12 +733,17 @@ namespace PMRDC
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if(idlestop == -1)
+            {
+                idlestoptime = "無";
+            }
             string texthelp = "* 依軟體使用辦法，請勿長時間占用\r\n* " +
           "若有急需使用軟體，但無License情況請聯絡RDPM(Marcus Kuo #33930)\r\n* " +
           "程序問題可以先在右下角圖示右鍵Reload排除\r\n* " +
           "平台使用問題請聯絡Willy Guo(#32725)\r\n" +
           "版本號 : " + Version + "\r\n" +
-          "xrepeate : " + xrepeat;
+          "xrepeate : " + xrepeat + "\r\n" +
+          "閒置取消時間到 : " + idlestoptime;
 
             MessageBox.Show(new Form { TopMost = true }, texthelp);
         }
@@ -784,6 +807,36 @@ namespace PMRDC
         private void label2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void cancelidlebtn_Click(object sender, EventArgs e)
+        {
+            string textBoxValue = cancelidletxt.Text;
+            if (string.IsNullOrEmpty(textBoxValue))
+            {
+                // 处理文本框为空的情况
+            }
+            else
+            {
+                xrepeat = 0;
+                idlestopcount = 0;
+                label18.Text = textBoxValue + "小時";
+                idlestop = int.Parse(textBoxValue);
+                DateTime currentTime = DateTime.Now;
+                DateTime newTime = currentTime.AddHours(idlestop);
+                idlestop = idlestop * 180;
+                idlestoptime = newTime + "結束";
+                // 处理文本框不为空的情况
+            }
+        }
+
+        private void cancelidletxt_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                // 如果输入的不是数字或允许的特殊键，则阻止该字符的输入
+                e.Handled = true;
+            }
         }
     }
 }

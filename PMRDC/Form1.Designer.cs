@@ -70,6 +70,10 @@
             this.day6_text = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.day7_text = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.cancelidletxt = new System.Windows.Forms.TextBox();
+            this.cancelidlebtn = new System.Windows.Forms.Button();
+            this.label18 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -330,7 +334,7 @@
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(1395, 792);
+            this.textBox5.Location = new System.Drawing.Point(1354, 792);
             this.textBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
@@ -446,12 +450,58 @@
             this.day7_text.Size = new System.Drawing.Size(207, 44);
             this.day7_text.TabIndex = 24;
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(44, 782);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(193, 30);
+            this.label17.TabIndex = 35;
+            this.label17.Text = "取消閒置小時";
+            // 
+            // cancelidletxt
+            // 
+            this.cancelidletxt.Location = new System.Drawing.Point(303, 768);
+            this.cancelidletxt.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cancelidletxt.Multiline = true;
+            this.cancelidletxt.Name = "cancelidletxt";
+            this.cancelidletxt.Size = new System.Drawing.Size(207, 44);
+            this.cancelidletxt.TabIndex = 36;
+            this.cancelidletxt.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cancelidletxt_KeyPress);
+            // 
+            // cancelidlebtn
+            // 
+            this.cancelidlebtn.BackColor = System.Drawing.Color.NavajoWhite;
+            this.cancelidlebtn.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.cancelidlebtn.ForeColor = System.Drawing.Color.SteelBlue;
+            this.cancelidlebtn.Location = new System.Drawing.Point(545, 757);
+            this.cancelidlebtn.Margin = new System.Windows.Forms.Padding(8);
+            this.cancelidlebtn.Name = "cancelidlebtn";
+            this.cancelidlebtn.Size = new System.Drawing.Size(229, 75);
+            this.cancelidlebtn.TabIndex = 37;
+            this.cancelidlebtn.Text = "確認";
+            this.cancelidlebtn.UseVisualStyleBackColor = false;
+            this.cancelidlebtn.Click += new System.EventHandler(this.cancelidlebtn_Click);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(317, 844);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(43, 30);
+            this.label18.TabIndex = 38;
+            this.label18.Text = "無";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SteelBlue;
             this.ClientSize = new System.Drawing.Size(1883, 1060);
+            this.Controls.Add(this.label18);
+            this.Controls.Add(this.cancelidlebtn);
+            this.Controls.Add(this.cancelidletxt);
+            this.Controls.Add(this.label17);
             this.Controls.Add(this.now_text);
             this.Controls.Add(this.workend_text);
             this.Controls.Add(this.workstr_text);
@@ -540,5 +590,9 @@
         private System.Windows.Forms.TextBox day6_text;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox day7_text;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox cancelidletxt;
+        private System.Windows.Forms.Button cancelidlebtn;
+        private System.Windows.Forms.Label label18;
     }
 }
