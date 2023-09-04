@@ -461,7 +461,7 @@ namespace PMRDC
             }
             foreach (var outerKvp in SWDictionary)
             {
-                textBox1reapeat.Text = outerKvp.Value["xrepeat"].ToString();
+                //textBox1reapeat.Text = outerKvp.Value["SWname"].ToString();
                 SW_exist = SW_existFuc((string)outerKvp.Value["SWname"]);
                 textBox1.Text = SW_exist.ToString();
                 //textBox5.Text = sigmaFirstOpen.ToString();
@@ -485,7 +485,7 @@ namespace PMRDC
                     {
                         outerKvp.Value["PastX"] = outerKvp.Value["nowX"];
                         outerKvp.Value["nowX"] = int.Parse(string.Format("{0}", System.Windows.Forms.Cursor.Position.X));
-                        string topmostcheck = GetActiveWindowTitle((string)outerKvp.Value["SWname"]);
+                        string topmostcheck = GetActiveWindowTitle((string)outerKvp.Value["WindowTitle"]);
                         topmosttext.Text = topmostcheck;
                         //如果滑鼠座標跟上一次依樣，或是滑鼠座標等於0，或是6Simga不在最上層
                         if (((int)outerKvp.Value["PastX"] == (int)outerKvp.Value["nowX"]) || ((int)outerKvp.Value["PastX"] == 0) || (topmostcheck == "WindowsTitleCheckNot"))
@@ -497,6 +497,8 @@ namespace PMRDC
                             if ((dspNow >= worktime_str) && (dspNow <= worktime_end) && (DayOfWeek.Saturday != nowtime.DayOfWeek) && (DayOfWeek.Sunday != nowtime.DayOfWeek))
                             {
                                 outerKvp.Value["xrepeat"] = (int)outerKvp.Value["xrepeat"] + 1;
+                                textBox2.Text += outerKvp.Value["SWname"] + ": " + outerKvp.Value["xrepeat"] + "\r\n";
+
                             }
                             else
                             {
@@ -510,7 +512,8 @@ namespace PMRDC
 
                         }
                     }
-                    if (((int)outerKvp.Value["xrepeat"] % 135 == 0) && ((int)outerKvp.Value["xrepeat"] != 0))
+                    //if (((int)outerKvp.Value["xrepeat"] % 135 == 0) && ((int)outerKvp.Value["xrepeat"] != 0))
+                    if (((int)outerKvp.Value["xrepeat"] % 135 == -1) && ((int)outerKvp.Value["xrepeat"] != 0))
                     {
                         //logwrite("idle45");
                         LogapiAsync("idle45", (string)outerKvp.Value["SWname"]);
@@ -520,7 +523,9 @@ namespace PMRDC
                         return;
                     }
                     //如果60分鐘都沒動，就紀錄後關閉平台
-                    if (((int)outerKvp.Value["xrepeat"] % 180 == 0) && ((int)outerKvp.Value["xrepeat"] != 0))
+                    //20230904
+                    //if (((int)outerKvp.Value["xrepeat"] % 180 == 0) && ((int)outerKvp.Value["xrepeat"] != 0))
+                    if (((int)outerKvp.Value["xrepeat"] % 180 == -1) && ((int)outerKvp.Value["xrepeat"] != 0))
                     {
                         timeminend = DateTime.Now;
                         TimeSpan ts = timeminend.Subtract((DateTime)outerKvp.Value["timeminstr"]);
@@ -573,7 +578,8 @@ namespace PMRDC
                         int tsmin = (int)ts.TotalMinutes;
                         //logwrite("sleepclose");
                         Task<bool> task = LogapiAsync("sleepclose", (string)outerKvp.Value["SWname"], tsmin);
-                        idlecloseSW((string)outerKvp.Value["SWname"]);
+                        //20230904，必需把idlecloseSW開回來
+                        //idlecloseSW((string)outerKvp.Value["SWname"]);
                         //ClosePress("6SigmaET");//關閉外部檔案
                         string text60 = "因電腦即將睡眠，故將" + (string)outerKvp.Value["SWname"] + "關閉。";
                         outerKvp.Value["FirstOpen"] = true;
@@ -623,6 +629,7 @@ namespace PMRDC
         }
         private void Form1_Load_1(object sender, EventArgs e)
         {
+            //Sigma
             Dictionary<string, object> SigmaDictionary = new Dictionary<string, object>();
             SigmaDictionary["SWname"] = "6SigmaET";
             SigmaDictionary["xrepeat"] = 0;
@@ -631,10 +638,42 @@ namespace PMRDC
             SigmaDictionary["FirstOpen"] = true;
             SigmaDictionary["totolsleeptime"] = 0;
             SigmaDictionary["timeminstr"] = DateTime.Now;
-            SigmaDictionary["xrepeat"] = 0;
+            SigmaDictionary["xrepeat"] = 0; 
             SigmaDictionary["PastX"] = 0;
+            SigmaDictionary["WindowTitle"] = "6SigmaET";
             SigmaDictionary["nowX"] = 0;
             SWDictionary["Sigma"] = SigmaDictionary;
+
+            //TraceProXP
+            Dictionary<string, object> TraceProXPDictionary = new Dictionary<string, object>();
+            TraceProXPDictionary["SWname"] = "TraceProXP";
+            TraceProXPDictionary["xrepeat"] = 0;
+            TraceProXPDictionary["SW_exist"] = SW_existFuc("TraceProXP");
+            TraceProXPDictionary["check"] = false;
+            TraceProXPDictionary["FirstOpen"] = true;
+            TraceProXPDictionary["totolsleeptime"] = 0;
+            TraceProXPDictionary["timeminstr"] = DateTime.Now;
+            TraceProXPDictionary["xrepeat"] = 0;
+            TraceProXPDictionary["PastX"] = 0;
+            TraceProXPDictionary["WindowTitle"] = "TracePro Expert";
+            TraceProXPDictionary["nowX"] = 0;
+            SWDictionary["TraceProXP"] = TraceProXPDictionary;
+
+            //TraceProST
+            Dictionary<string, object> TraceProSTDictionary = new Dictionary<string, object>();
+            TraceProSTDictionary["SWname"] = "TraceProST";
+            TraceProSTDictionary["xrepeat"] = 0;
+            TraceProSTDictionary["SW_exist"] = SW_existFuc("TraceProST");
+            TraceProSTDictionary["check"] = false;
+            TraceProSTDictionary["FirstOpen"] = true;
+            TraceProSTDictionary["totolsleeptime"] = 0;
+            TraceProSTDictionary["timeminstr"] = DateTime.Now;
+            TraceProSTDictionary["xrepeat"] = 0;
+            TraceProSTDictionary["PastX"] = 0;
+            TraceProSTDictionary["WindowTitle"] = "TracePro Standard";
+            TraceProSTDictionary["nowX"] = 0;
+            SWDictionary["TraceProST"] = TraceProSTDictionary;
+
             SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
             //當平台開啟時，先預設一些要跑的動作
             //在桌面建立一個捷徑

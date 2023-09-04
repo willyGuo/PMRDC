@@ -74,6 +74,8 @@
             this.cancelidletxt = new System.Windows.Forms.TextBox();
             this.cancelidlebtn = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -492,12 +494,32 @@
             this.label18.TabIndex = 38;
             this.label18.Text = "無";
             // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(612, 265);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(500, 445);
+            this.textBox2.TabIndex = 39;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(607, 212);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(163, 30);
+            this.label19.TabIndex = 40;
+            this.label19.Text = "Xrepeat紀錄";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SteelBlue;
             this.ClientSize = new System.Drawing.Size(1883, 1060);
+            this.Controls.Add(this.label19);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.cancelidlebtn);
             this.Controls.Add(this.cancelidletxt);
@@ -594,5 +616,7 @@
         private System.Windows.Forms.TextBox cancelidletxt;
         private System.Windows.Forms.Button cancelidlebtn;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label19;
     }
 }
